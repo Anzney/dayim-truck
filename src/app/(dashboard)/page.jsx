@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import KpiHeaderCards from '../../components/dashboard/kpi-header-cards'
 import FleetMaintenance from '../../components/dashboard/fleet-maintenance'
 import VehicleOffRoadUpdates from '../../components/dashboard/vehicle-off-road-updates'
-import { BotMessageSquare, Maximize2, Send, TriangleAlert, Lightbulb, CircleCheck, Sparkles, TrendingUp, Shield, Zap, Brain, MessageSquare } from 'lucide-react'
+import { BotMessageSquare, Maximize2, Send, TriangleAlert, Lightbulb, CircleCheck, Sparkles, TrendingUp, Shield, Zap, Brain, MessageSquare, User } from 'lucide-react'
 import { Input } from "../../components/ui/input"
 import { Button } from '../../components/ui/button'
 import { useNotification } from '../../context/notification-context'
@@ -42,27 +42,33 @@ const aiInsights = [
 const exampleQuestions = [
   {
     id: 1,
-    question: "How can I optimize fuel consumption?",
+    question: "Which vehicles are currently active, idling, or stopped?",
     icon: TrendingUp,
-    category: "Optimization"
+    category: "Live Status"
   },
   {
     id: 2,
-    question: "Which trucks need maintenance soon?",
-    icon: Shield,
-    category: "Maintenance"
+    question: "Show me fuel consumption trend over the last 30 days",
+    icon: Zap,
+    category: "Fuel Analytics"
   },
   {
     id: 3,
-    question: "Show me route efficiency analysis",
-    icon: Zap,
-    category: "Analytics"
+    question: "Which vehicles have the most safety events?",
+    icon: Shield,
+    category: "Safety"
   },
   {
     id: 4,
-    question: "Predict fleet performance next week",
+    question: "What is the fleet utilization rate?",
     icon: Brain,
-    category: "Prediction"
+    category: "Efficiency"
+  },
+  {
+    id: 5,
+    question: "Where are my vehicles located right now?",
+    icon: MessageSquare,
+    category: "Location"
   }
 ]
 
@@ -89,13 +95,80 @@ const aiCapabilities = [
   }
 ]
 
+// Mock AI response function - in real implementation, this would call your API
+const generateAIResponse = (question) => {
+  const responses = {
+    "Which vehicles are currently active, idling, or stopped?": "Based on real-time data, I can see:\n\n• **Active Vehicles**: 8 vehicles currently in motion\n• **Idling Vehicles**: 3 vehicles (IDs: V-001, V-005, V-012) with echoIdlingevent > 0\n• **Stopped Vehicles**: 2 vehicles (IDs: V-003, V-008) with distance unchanged for 2+ hours\n\n**Recommendation**: Consider reducing idling time to improve fuel efficiency.",
+    "Show me fuel consumption trend over the last 30 days": "**Fuel Consumption Analysis (Last 30 Days):**\n\n• **Average fuelPerX**: 12.5 L/100km across fleet\n• **Most Efficient**: Vehicle V-007 (9.8 L/100km)\n• **Least Efficient**: Vehicle V-015 (16.2 L/100km)\n• **Trend**: 8% improvement in fuel efficiency compared to previous month\n\n**Insight**: Route optimization has reduced fuel consumption by 12% on long-haul trips.",
+    "Which vehicles have the most safety events?": "**Safety Events Analysis:**\n\n**Harsh Braking Leaders:**\n• V-009: 15 events (needs driver training)\n• V-013: 12 events\n\n**Harsh Acceleration:**\n• V-006: 8 events\n• V-011: 7 events\n\n**Idling Events:**\n• V-001: 23 excessive idling instances\n• V-005: 18 instances\n\n**Recommendation**: Schedule safety training for drivers of V-009 and V-006.",
+    "What is the fleet utilization rate?": "**Fleet Utilization Analysis:**\n\n• **Average Weight Factor**: 0.78 (78% capacity utilization)\n• **Distance Efficiency**: 92% of vehicles operating at optimal capacity\n• **Load Distribution**: Well-balanced across fleet\n\n**Top Performers:**\n• V-004: 94% utilization\n• V-008: 91% utilization\n\n**Areas for Improvement:**\n• V-012: 65% utilization (under-utilized)\n• V-015: 58% utilization (needs route optimization)",
+    "Where are my vehicles located right now?": "**Current Vehicle Locations:**\n\n• **V-001**: 24.7136°N, 46.6753°E (Riyadh - Active)\n• **V-002**: 21.2703°N, -157.8083°W (Jeddah - In Transit)\n• **V-003**: 26.4207°N, 50.0888°E (Dammam - Stopped)\n• **V-004**: 24.7136°N, 46.6753°E (Riyadh - Loading)\n• **V-005**: 21.2703°N, -157.8083°W (Jeddah - Idling)\n\n**Map View**: All vehicles are within operational zones with good GPS signal strength."
+  }
+  
+  return responses[question] || "I'm analyzing your fleet data to provide insights. Please allow me a moment to process the current information and provide you with detailed analytics based on the available vehicle metrics including fuel consumption, safety events, and utilization rates."
+}
+
 const page = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   const [showAllInsights, setShowAllInsights] = useState(false)
+  const [chatStarted, setChatStarted] = useState(false)
+  const [messages, setMessages] = useState([])
+  const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { alerts } = useNotification()
 
   const handleQuestionClick = (question) => {
     setSelectedQuestion(question)
+    startChat(question.question)
+  }
+
+  const startChat = (question) => {
+    setChatStarted(true)
+    setMessages([])
+    sendMessage(question)
+  }
+
+  const sendMessage = async (messageText) => {
+    if (!messageText.trim()) return
+
+    // Add user message
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: messageText,
+      timestamp: new Date()
+    }
+    
+    setMessages(prev => [...prev, userMessage])
+    setInputValue('')
+    setIsLoading(true)
+
+    // Simulate AI response delay
+    setTimeout(() => {
+      const aiResponse = {
+        id: Date.now() + 1,
+        type: 'ai',
+        content: generateAIResponse(messageText),
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, aiResponse])
+      setIsLoading(false)
+    }, 1500)
+  }
+
+  const handleSendMessage = () => {
+    if (!chatStarted) {
+      startChat(inputValue)
+    } else {
+      sendMessage(inputValue)
+    }
+  }
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
   }
 
   const handleShowAllInsights = () => {
@@ -160,60 +233,125 @@ const page = () => {
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
                   <span className='text-xs font-medium text-green-700'>Online</span>
                 </div>
-                
               </div>
             </div>
 
             {/* Main Content Area */}
-            <div className='flex-1 p-3 space-y-3 overflow-y-auto'>
-              {/* AI Capabilities */}
-              <div className='grid grid-cols-2 gap-2'>
-                {aiCapabilities.map((capability, index) => (
-                  <div key={index} className=' rounded-lg p-2 border'>
-                    <div className='flex items-center gap-2'>
-                      <div className='p-1 rounded bg-blue-600'>
-                        <capability.icon className='size-3 text-white' />
+            <div className='flex-1 p-3 overflow-y-auto'>
+              {!chatStarted ? (
+                <div className='space-y-3'>
+                  {/* AI Capabilities */}
+                  <div className='grid grid-cols-2 gap-2'>
+                    {aiCapabilities.map((capability, index) => (
+                      <div key={index} className=' rounded-lg p-2 border'>
+                        <div className='flex items-center gap-2'>
+                          <div className='p-1 rounded bg-blue-600'>
+                            <capability.icon className='size-3 text-white' />
+                          </div>
+                          <h3 className='text-xs font-semibold'>{capability.title}</h3>
+                        </div>
+                        <p className='text-xs text-muted-foreground mt-1'>{capability.description}</p>
                       </div>
-                      <h3 className='text-xs font-semibold'>{capability.title}</h3>
-                    </div>
-                    <p className='text-xs text-muted-foreground mt-1'>{capability.description}</p>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              {/* Example Questions */}
-              <div className='space-y-2'>
-                <div className='flex items-center gap-2'>
-                  <MessageSquare className='size-3 text-blue-600' />
-                  <h3 className='text-sm font-semibold'>Quick questions:</h3>
+                  {/* Example Questions */}
+                  <div className='space-y-2'>
+                    <div className='flex items-center gap-2'>
+                      <MessageSquare className='size-3 text-blue-600' />
+                      <h3 className='text-sm font-semibold'>Quick questions:</h3>
+                    </div>
+                    <div className='flex flex-wrap gap-2'>
+                      {exampleQuestions.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleQuestionClick(item)}
+                          className={`px-3 py-1.5 rounded-full text-xs border transition-all duration-200 ${
+                            selectedQuestion?.id === item.id
+                              ? 'bg-blue-600 text-white border-blue-600'
+                              : 'border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                          }`}
+                        >
+                          {item.question}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* AI Status */}
+                  <div className='bg-blue-50 dark:bg-blue-400/20 rounded-lg p-2 border border-blue-200 dark:border-blue-200/20'>
+                    <div className='flex items-center gap-2'>
+                      <Sparkles className='size-3 text-blue-600 dark:text-blue-200' />
+                      <h3 className='text-xs font-semibold text-blue-800 dark:text-blue-200'>Ready to help</h3>
+                    </div>
+                    <p className='text-xs text-blue-700 dark:text-blue-200 mt-1'>
+                      Ask me anything about your fleet operations
+                    </p>
+                  </div>
                 </div>
-                <div className='flex flex-wrap gap-2'>
-                  {exampleQuestions.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleQuestionClick(item)}
-                      className={`px-3 py-1.5 rounded-full text-xs border transition-all duration-200 ${
-                        selectedQuestion?.id === item.id
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-neutral-800'
-                      }`}
+              ) : (
+                /* Chat Messages */
+                <div className='space-y-4'>
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      {item.question}
-                    </button>
+                      <div
+                        className={`flex items-start gap-2 max-w-[80%] ${
+                          message.type === 'user' ? 'flex-row-reverse' : 'flex-row'
+                        }`}
+                      >
+                        <div className={`p-2 rounded-full ${
+                          message.type === 'user' 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-gray-100 dark:bg-neutral-700'
+                        }`}>
+                          {message.type === 'user' ? (
+                            <User className='size-4' />
+                          ) : (
+                            <BotMessageSquare className='size-4' />
+                          )}
+                        </div>
+                        <div
+                          className={`p-3 rounded-lg ${
+                            message.type === 'user'
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-gray-50 dark:bg-neutral-800 border'
+                          }`}
+                        >
+                          <p className={`text-sm whitespace-pre-line ${
+                            message.type === 'user' ? 'text-white' : 'text-gray-900 dark:text-gray-100'
+                          }`}>
+                            {message.content}
+                          </p>
+                          <p className={`text-xs mt-1 ${
+                            message.type === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ))}
+                  
+                  {isLoading && (
+                    <div className='flex justify-start'>
+                      <div className='flex items-start gap-2'>
+                        <div className='p-2 rounded-full bg-gray-100 dark:bg-neutral-700'>
+                          <BotMessageSquare className='size-4' />
+                        </div>
+                        <div className='bg-gray-50 dark:bg-neutral-800 border p-3 rounded-lg'>
+                          <div className='flex items-center gap-2'>
+                            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600'></div>
+                            <p className='text-sm text-gray-600 dark:text-gray-400'>Analyzing fleet data...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-
-              {/* AI Status */}
-              <div className='bg-blue-50 dark:bg-blue-400/20 rounded-lg p-2 border border-blue-200 dark:border-blue-200/20'>
-                <div className='flex items-center gap-2'>
-                  <Sparkles className='size-3 text-blue-600 dark:text-blue-200' />
-                  <h3 className='text-xs font-semibold text-blue-800 dark:text-blue-200'>Ready to help</h3>
-                </div>
-                <p className='text-xs text-blue-700 dark:text-blue-200 mt-1'>
-                  Ask me anything about your fleet operations
-                </p>
-              </div>
+              )}
             </div>
 
             {/* Input Area */}
@@ -221,19 +359,23 @@ const page = () => {
               <div className='flex items-center gap-2'>
                 <Input 
                   type="text"
-                  placeholder="Ask me anything about your fleet..."
+                  placeholder={chatStarted ? "Ask me anything about your fleet..." : "Ask me anything about your fleet..."}
                   className='flex-1'
-                  value={selectedQuestion?.question || ''}
-                  onChange={(e) => setSelectedQuestion(null)}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isLoading}
                 />
                 <Button 
                   size="icon" 
-                  className="bg-blue-600 hover:bg-blue-700" 
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleSendMessage}
+                  disabled={isLoading || !inputValue.trim()}
                 >
                   <Send className='size-4 text-white' />
                 </Button>
               </div>
-              {selectedQuestion && (
+              {selectedQuestion && !chatStarted && (
                 <p className='text-xs text-muted-foreground mt-1 flex items-center gap-1'>
                   <Sparkles className='size-3' />
                   Selected: {selectedQuestion.question}
@@ -243,38 +385,6 @@ const page = () => {
           </div>
         </div>
       </div>
-
-      {/* <div>
-        <div className='flex'>
-          <KpiHeaderCards />
-        </div>
-        <div className='grid grid-cols-4 gap-4 w-full'>
-
-          <div className='max-h-[66vh] overflow-y-scroll col-span-2 col-start-3'>
-            <FleetMaintenance />
-          </div>
-        </div>
-      </div>
-      <div className='min-h-[80vh] min-w-1/3 flex-1'>
-        <div className='border rounded-2xl min-h-[87vh] flex flex-col w-full justify-between'>
-          <div className='flex items-center justify-between p-3 border-b'>
-            <h2 className='font-bold text-lg tracking-tight flex items-center gap-2 w-full'>
-              <BotMessageSquare />
-              DayimGPT Assistant
-            </h2>
-            <Maximize2 className='size-5' />
-          </div>
-          <div className='flex items-center gap-2 p-3 border-t'>
-            <Input 
-              type="text"
-              placeholder="Ask me anything..."
-            />
-            <Button size="icon" className="bg-gradient-to-br from-sky-300 via-blue-500 to-purple-600" >
-              <Send />
-            </Button>
-          </div>
-        </div>
-      </div> */}
     </div>
   )
 }
