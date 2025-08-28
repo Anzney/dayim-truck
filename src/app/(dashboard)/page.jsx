@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import KpiHeaderCards from '../../components/dashboard/kpi-header-cards'
 import FleetMaintenance from '../../components/dashboard/fleet-maintenance'
 import VehicleOffRoadUpdates from '../../components/dashboard/vehicle-off-road-updates'
-import { BotMessageSquare, Maximize2, Send, TriangleAlert, Lightbulb, CircleCheck, Sparkles, TrendingUp, Shield, Zap, Brain, MessageSquare, User } from 'lucide-react'
+import { BotMessageSquare, Maximize2, Send, TriangleAlert, Lightbulb, CircleCheck, Sparkles, TrendingUp, Shield, Zap, Brain, MessageSquare, User, Loader } from 'lucide-react'
 import { Input } from "../../components/ui/input"
 import { Button } from '../../components/ui/button'
 import { useNotification } from '../../context/notification-context'
@@ -182,7 +182,7 @@ const page = () => {
         <div className='col-span-2'>
           <VehicleOffRoadUpdates />
         </div>
-        <div className='border max-h-[34vh] rounded-2xl p-3 overflow-y-scroll col-span-2 dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl'>
+        <div className='border max-h-[34vh] h-[32.5vh] rounded-2xl p-3 overflow-y-scroll col-span-2 dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl'>
           <div className='flex items-center justify-between pb-2'>
             <h2 className='font-bold text-lg tracking-tight flex items-center gap-2 w-full'>
               <Lightbulb className='text-amber-400' />
@@ -203,7 +203,7 @@ const page = () => {
               })
             }
             {!showAllInsights && aiInsights.length > 3 && (
-              <div className='text-center py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800/50 rounded-lg transition-colors' onClick={handleShowAllInsights}>
+              <div className='text-center py-3 mt-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800/50 rounded-lg transition-colors' onClick={handleShowAllInsights}>
                 <p className='text-xs text-muted-foreground hover:text-foreground transition-colors'>
                   +{aiInsights.length - 3} more insights available
                 </p>
@@ -212,8 +212,8 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 max-w-1/3">
-        <div className='min-h-[80vh] col-span-2 flex-1'>
+      <div className="w-1/3 flex-shrink-0">
+        <div className='min-h-[80vh] w-full'>
           <div className='border rounded-2xl h-[87vh] flex flex-col w-full dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-netural-800/40 dark:backdrop-blur-2xl'>
             {/* Header */}
             <div className='flex items-center justify-between p-3 border-b'>
@@ -237,7 +237,7 @@ const page = () => {
             </div>
 
             {/* Main Content Area */}
-            <div className='flex-1 p-3 overflow-y-auto'>
+            <div className='flex-1 p-3 overflow-y-auto min-w-0'>
               {!chatStarted ? (
                 <div className='space-y-3'>
                   {/* AI Capabilities */}
@@ -291,14 +291,14 @@ const page = () => {
                 </div>
               ) : (
                 /* Chat Messages */
-                <div className='space-y-4'>
+                <div className='space-y-4 min-h-[200px]'>
                   {messages.map((message) => (
                     <div
                       key={message.id}
                       className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`flex items-start gap-2 max-w-[80%] ${
+                        className={`flex items-start gap-2 max-w-[80%] min-w-[200px] ${
                           message.type === 'user' ? 'flex-row-reverse' : 'flex-row'
                         }`}
                       >
@@ -337,13 +337,13 @@ const page = () => {
                   
                   {isLoading && (
                     <div className='flex justify-start'>
-                      <div className='flex items-start gap-2'>
+                      <div className='flex items-start gap-2 min-w-[200px]'>
                         <div className='p-2 rounded-full bg-gray-100 dark:bg-neutral-700'>
                           <BotMessageSquare className='size-4' />
                         </div>
-                        <div className='bg-gray-50 dark:bg-neutral-800 border p-3 rounded-lg'>
+                        <div className='bg-gray-50 dark:bg-neutral-800 border p-3 rounded-lg min-w-[180px]'>
                           <div className='flex items-center gap-2'>
-                            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600'></div>
+                            <Loader className='size-4 animate-spin' />
                             <p className='text-sm text-gray-600 dark:text-gray-400'>Analyzing fleet data...</p>
                           </div>
                         </div>
