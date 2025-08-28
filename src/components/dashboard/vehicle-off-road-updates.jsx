@@ -15,19 +15,9 @@ const offRoadIncidents = [
     progressPercentage: 75,
     tag: "Breakdown"
   },
+
   {
     id: 2,
-    vehicleId: "567-XYZ",
-    type: "Accident",
-    status: "progress",
-    progress: "Police report submitted, insurance claim under process",
-    lastUpdate: "17/08/2025",
-    expectedResolution: "Pending confirmation",
-    progressPercentage: 40,
-    tag: "Accident"
-  },
-  {
-    id: 3,
     vehicleId: "890-PQR",
     type: "Scheduled",
     status: "near-completion",
@@ -37,6 +27,19 @@ const offRoadIncidents = [
     progressPercentage: 90,
     tag: "Maintenance"
   },
+
+  {
+    id: 3,
+    vehicleId: "567-XYZ",
+    type: "Accident",
+    status: "progress",
+    progress: "Police report submitted, insurance claim under process",
+    lastUpdate: "17/08/2025",
+    expectedResolution: "Pending confirmation",
+    progressPercentage: 40,
+    tag: "Accident"
+  },
+
   {
     id: 4,
     vehicleId: "456-DEF",
@@ -57,7 +60,7 @@ const getStatusIcon = (status) => {
     case 'progress':
       return <Clock className="size-4 text-yellow-500" />
     case 'near-completion':
-      return <Car className="size-4 text-green-500" />
+      return <Truck className="size-4 text-green-500" />
     default:
       return <Wrench className="size-4 text-gray-500" />
   }
@@ -91,7 +94,7 @@ const getTagColor = (tag) => {
 
 const VehicleOffRoadUpdates = () => {
   return (
-    <div className='border rounded-2xl p-3 max-h-[51vh] flex flex-col dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl'>
+    <div className='border rounded-2xl p-3 min-h-[52vh] xl:h-[52vh] flex flex-col dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl'>
       {/* Header */}
       <div className='flex items-center justify-between pb-3 mb-3 border-b flex-shrink-0'>
         <div>

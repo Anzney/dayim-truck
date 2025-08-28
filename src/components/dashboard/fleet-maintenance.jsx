@@ -1,6 +1,6 @@
 import React from 'react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
-import { Sparkles, Wrench, Clock, AlertTriangle, CheckCircle, Calendar, TrendingUp, Truck } from 'lucide-react'
+import { Sparkles, Wrench, Clock, AlertTriangle, CheckCircle, Calendar, TrendingUp, Truck, Bot } from 'lucide-react'
 import FullDonutChart from '../ui/full-donut-chart'
 
 const maintenanceData = {
@@ -75,7 +75,7 @@ const FleetMaintenance = () => {
   const operationalPercentage = Math.round((maintenanceData.operational / maintenanceData.totalFleet) * 100)
 
   return (
-    <div className='border rounded-2xl p-3 h-[30vh] overflow-y-scroll dark:bg-gradient-to-br dark:from-neutral-700/30 dark:from-70% dark:to-blue-900/40 dark:backdrop-blur-2xl'>
+    <div className='border rounded-2xl p-3 h-full overflow-y-scroll dark:bg-gradient-to-br dark:from-neutral-700/30 dark:from-70% dark:to-blue-900/40 dark:backdrop-blur-2xl'>
       <div className='flex items-center justify-between pb-2 mb-3'>
         <h2 className='font-bold text-lg tracking-tight flex items-center gap-2 w-full'>
           <Wrench className='size-5 text-blue-600' />
@@ -111,7 +111,7 @@ const FleetMaintenance = () => {
 
       <div className='flex h-[calc(100%-4rem)] gap-14 justify-between'>
         {/* Left Side - Details */}
-        <div className='flex-1 space-y-3'>
+        <div className='flex-1 space-y-3 flex flex-col justify-between'>
           {/* Fleet Health Summary */}
           {/* <div className='bg-white rounded-lg p-3 border shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
@@ -128,20 +128,24 @@ const FleetMaintenance = () => {
 
           {/* Status Breakdown */}
           <div className='space-y-2'>
-            {maintenanceData.chartData.map((item, index) => (
-              <div key={index} className=''>
-                <div className='flex items-center justify-between gap-2'>
-                  <div className='flex items-center gap-2'>
-                    <div 
-                      className='w-3 h-3 rounded-full' 
-                      style={{ backgroundColor: item.color }}
-                    ></div>
-                    <p className='text-xs tracking-tight font-mono'>{item.name}</p>
+              {maintenanceData.chartData.map((item, index) => (
+                <div key={index} className=''>
+                  <div className='flex items-center justify-between gap-2'>
+                    <div className='flex items-center gap-2'>
+                      <div 
+                        className='w-3 h-3 rounded-full' 
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      <p className='text-xs tracking-tight font-mono'>{item.name}</p>
+                    </div>
+                    <p className='text-sm font-mono font-bold dark:text-[#e2e2e2]'>{item.value}</p>
                   </div>
-                  <p className='text-sm font-mono font-bold dark:text-[#e2e2e2]'>{item.value}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
+          <div className='border p-2 border-blue-400 rounded-lg bg-gradient-to-b from-blue-50 to-blue-100 text-blue-600'>
+            <p className='flex items-center gap-2 text-sm'><Bot className='size-4'/> AI Insight</p>
+            <p className='text-sm tracking-tight'>In next 48 hrs 1 vehicle is ready to be use</p>
           </div>
         </div>
 
