@@ -1,25 +1,14 @@
 // Historical Data API Configuration and Structure
 
-// API Configuration
+// API Configuration - Updated to use local proxy
 const HISTORY_DATA_CONFIG = {
-  baseUrl: "https://www.awtltrack.com/app/index.php",
-  params: {
-    c: "api",
-    a: "trackDataReport"
-  },
-  headers: {
-    "Content-Type": "application/json",
-    "token": "A4h2M8LLsqR81D"
-  }
+  baseUrl: "/api/history", // Local proxy endpoint
+  params: {} // No params needed for proxy
 };
 
-// API URL builder
+// API URL builder - Simplified for proxy
 const buildHistoryDataUrl = () => {
-  const url = new URL(HISTORY_DATA_CONFIG.baseUrl);
-  Object.entries(HISTORY_DATA_CONFIG.params).forEach(([key, value]) => {
-    url.searchParams.append(key, value);
-  });
-  return url.toString();
+  return HISTORY_DATA_CONFIG.baseUrl;
 };
 
 // Authentication structure
@@ -66,24 +55,25 @@ const historicalDataStructure = {
 
 // API functions
 const historyDataAPI = {
-  // Fetch historical vehicle data
+  // Fetch historical vehicle data from proxy
   async fetchHistoryData(requestData) {
     try {
       const url = buildHistoryDataUrl();
       
       // Prepare request body
       const requestBody = {
-        auth: authStructure,
-        data: {
-          ...requestDataStructure,
-          ...requestData
-        }
+        ...requestDataStructure,
+        ...requestData
       };
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: HISTORY_DATA_CONFIG.headers,
-        body: JSON.stringify(requestBody)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+        // Add cache control to ensure fresh data
+        cache: 'no-cache'
       });
       
       if (!response.ok) {
@@ -91,6 +81,12 @@ const historyDataAPI = {
       }
       
       const data = await response.json();
+      
+      // Check if the proxy returned an error
+      if (data.error) {
+        throw new Error(data.message || data.error);
+      }
+      
       return data;
     } catch (error) {
       console.error('Error fetching historical data:', error);
