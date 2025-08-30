@@ -1,115 +1,94 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
-import Map, { Marker, Popup, NavigationControl, FullscreenControl } from 'react-map-gl/maplibre'
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
+import Map, { Marker, NavigationControl, FullscreenControl } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { Truck, MapPin, Clock, Gauge, Calendar, Weight, DoorOpen } from 'lucide-react'
+import { Truck, MapPin, RefreshCw, Filter, X, Loader } from 'lucide-react'
 import { Button } from '../../../components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { Badge } from '../../../components/ui/badge'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover'
+import liveDataAPI from '../../../lib/livedata'
+import { useTheme } from 'next-themes'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select"
 
-// Dummy data based on the API structure
-const dummyVehicles = [
-  {
-    vehicleId: "32754",
-    vehicleNo: "8950-BGB",
-    latitude: 27.0203466000,
-    longitude: 49.6414216000,
-    TrackDateTime: "2025-08-26 16:46:46",
-    location: "Al Jubayl, Al Jubayl Governorate, Eastern Region, 35514, Saudi Arabia",
-    speed: "0.00",
-    ignition: "0",
-    distance: "129465.43",
-    expiryDate: "2030-03-16",
-    door: "Closed",
-    seatbelt: "NA",
-    isCanbus: "0",
-    weight: "1700.00"
-  },
-  {
-    vehicleId: "32755",
-    vehicleNo: "8951-ABC",
-    latitude: 27.0253466000,
-    longitude: 49.6454216000,
-    TrackDateTime: "2025-08-26 16:45:30",
-    location: "Al Jubayl Industrial City, Eastern Region, Saudi Arabia",
-    speed: "45.50",
-    ignition: "1",
-    distance: "145230.75",
-    expiryDate: "2030-05-20",
-    door: "Open",
-    seatbelt: "Fastened",
-    isCanbus: "1",
-    weight: "1850.00"
-  },
-  {
-    vehicleId: "32756",
-    vehicleNo: "8952-XYZ",
-    latitude: 27.0153466000,
-    longitude: 49.6354216000,
-    TrackDateTime: "2025-08-26 16:47:15",
-    location: "King Fahd Industrial Port, Al Jubayl, Saudi Arabia",
-    speed: "0.00",
-    ignition: "0",
-    distance: "98765.32",
-    expiryDate: "2029-12-10",
-    door: "Closed",
-    seatbelt: "NA",
-    isCanbus: "0",
-    weight: "2200.00"
-  },
-  {
-    vehicleId: "32757",
-    vehicleNo: "8953-DEF",
-    latitude: 27.0303466000,
-    longitude: 49.6504216000,
-    TrackDateTime: "2025-08-26 16:44:20",
-    location: "Al Jubayl Commercial District, Eastern Region, Saudi Arabia",
-    speed: "35.20",
-    ignition: "1",
-    distance: "156789.45",
-    expiryDate: "2030-08-15",
-    door: "Closed",
-    seatbelt: "Fastened",
-    isCanbus: "1",
-    weight: "1950.00"
-  },
-  {
-    vehicleId: "32758",
-    vehicleNo: "8954-GHI",
-    latitude: 27.0103466000,
-    longitude: 49.6304216000,
-    TrackDateTime: "2025-08-26 16:48:00",
-    location: "Al Jubayl Residential Area, Eastern Region, Saudi Arabia",
-    speed: "0.00",
-    ignition: "0",
-    distance: "112345.67",
-    expiryDate: "2030-01-25",
-    door: "Closed",
-    seatbelt: "NA",
-    isCanbus: "0",
-    weight: "1600.00"
-  }
-]
+import VehicleNumberFilter from "../../../components/vehicle-number-filter"
 
 const LiveTrackingPage = () => {
+  const [vehicles, setVehicles] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [selectedVehicles, setSelectedVehicles] = useState(new Set())
   const [viewState, setViewState] = useState({
-    longitude: 49.6414216000,
-    latitude: 27.0203466000,
-    zoom: 12
+    longitude: 46.6753,   // Riyadh longitude
+    latitude: 24.7136,    // Riyadh latitude
+    zoom: 8               // much broader view to show more area
   })
   
-  // Add custom styles for map
-  const mapStyle = {
-    width: '100%',
-    height: '100%',
-    borderRadius: '0',
-    overflow: 'hidden'
-  }
-  
   const [selectedVehicle, setSelectedVehicle] = useState(null)
+  const [vehicleNumberFilter, setVehicleNumberFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
+  const { theme, resolvedTheme } = useTheme()
 
   const mapRef = useRef()
+
+  // Determine if dark mode is active
+  const isDarkMode = resolvedTheme === 'dark'
+
+  // Fetch live data
+  const fetchLiveData = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await liveDataAPI.getFormattedLiveData()
+      
+      console.log('Raw API data:', data)
+      
+      // Ensure data is an array
+      const vehiclesArray = Array.isArray(data) ? data : [data]
+      
+      console.log('Vehicles array:', vehiclesArray)
+      
+      // Filter out vehicles with invalid coordinates
+      const validVehicles = vehiclesArray.filter(vehicle => 
+        vehicle.latitude && 
+        vehicle.longitude && 
+        !isNaN(parseFloat(vehicle.latitude)) && 
+        !isNaN(parseFloat(vehicle.longitude))
+      )
+      
+      console.log('Valid vehicles:', validVehicles)
+      
+      setVehicles(validVehicles)
+      
+      // Update map center based on vehicles using the new function
+      updateMapView(validVehicles)
+    } catch (err) {
+      console.error('Error fetching live data:', err)
+      setError('Failed to load vehicle data. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchLiveData()
+  }, [fetchLiveData])
+
+  // Auto-refresh every 30 second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchLiveData()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [fetchLiveData])
 
   const onMapClick = useCallback((event) => {
     setSelectedVehicle(null)
@@ -120,363 +99,612 @@ const LiveTrackingPage = () => {
     setSelectedVehicle(vehicle)
   }, [])
 
-  const getVehicleStatus = (ignition, speed) => {
+  // Handle checkbox selection
+  const handleVehicleSelect = (vehicleId) => {
+    const newSelected = new Set(selectedVehicles)
+    if (newSelected.has(vehicleId)) {
+      newSelected.delete(vehicleId)
+    } else {
+      newSelected.add(vehicleId)
+    }
+    setSelectedVehicles(newSelected)
+  }
+
+  // Handle select all
+  const handleSelectAll = () => {
+    if (selectedVehicles.size === filteredVehicles.length) {
+      setSelectedVehicles(new Set())
+    } else {
+      setSelectedVehicles(new Set(filteredVehicles.map(v => v.vehicleId)))
+    }
+  }
+
+  // Helper functions for data formatting
+  const getVehicleStatus = (ignition, speed, trackDateTime) => {
     const speedNum = parseFloat(speed)
-    if (ignition === "0") return "Offline"
-    if (speedNum === 0) return "Idle"
-    if (speedNum > 0 && speedNum < 5) return "Stopped"
+    
+    // Check if vehicle is offline based on ignition, speed, and time conditions
+    if (ignition === "0" && speedNum === 0) {
+      if (!trackDateTime) return "Offline"
+      
+      const trackDate = new Date(trackDateTime)
+      const currentDate = new Date()
+      const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+      const trackDay = new Date(trackDate.getFullYear(), trackDate.getMonth(), trackDate.getDate())
+      
+      // Check if data is not from today
+      if (trackDay.getTime() !== today.getTime()) {
+        return "Offline"
+      }
+      
+      // Check if data is older than 10 minutes
+      const timeDifferenceInMinutes = (currentDate.getTime() - trackDate.getTime()) / (1000 * 60)
+      if (timeDifferenceInMinutes > 10) {
+        return "Offline"
+      }
+    }
+    
+    if (speedNum === 0 && ignition === "1") return "Idle"
+    if (speedNum === 0 && ignition === "0") return "Stopped"
     return "Running"
   }
 
-  const getStatusColor = (ignition, speed) => {
-    const speedNum = parseFloat(speed)
-    if (ignition === "0") return "bg-gray-500"
-    if (speedNum === 0) return "bg-yellow-500"
-    if (speedNum > 0 && speedNum < 5) return "bg-orange-500"
+  const getStatusColor = (ignition, speed, trackDateTime) => {
+    const status = getVehicleStatus(ignition, speed, trackDateTime)
+    if (status === "Offline") return "bg-gray-500"
+    if (status === "Idle") return "bg-yellow-500"
+    if (status === "Stopped") return "bg-red-500"
     return "bg-green-500"
   }
 
-  const getStatusBadgeColor = (ignition, speed) => {
-    const speedNum = parseFloat(speed)
-    if (ignition === "0") return "bg-gray-100 text-gray-800 border-gray-200"
-    if (speedNum === 0) return "bg-yellow-100 text-yellow-800 border-yellow-200"
-    if (speedNum > 0 && speedNum < 5) return "bg-orange-100 text-orange-800 border-orange-200"
-    return "bg-green-100 text-green-800 border-green-200"
-  }
+  // Process vehicle data to create filter options
+  const vehicleNumberOptions = useMemo(() => {
+    const uniqueVehicles = vehicles.reduce((acc, vehicle) => {
+      const vehicleNo = vehicle.vehicleNo || `KWS${vehicle.vehicleId.slice(-4)}`
+      if (!acc.find(item => item.value === vehicleNo)) {
+        acc.push({
+          value: vehicleNo,
+          label: vehicleNo,
+          icon: Truck
+        })
+      }
+      return acc
+    }, [])
+    
+    return uniqueVehicles.sort((a, b) => a.label.localeCompare(b.label))
+  }, [vehicles])
 
-  // Calculate vehicle counts based on status
-  const vehicleCounts = React.useMemo(() => {
-    const counts = { running: 0, idle: 0, stopped: 0, offline: 0 }
-    dummyVehicles.forEach(vehicle => {
-      const status = getVehicleStatus(vehicle.ignition, vehicle.speed)
-      if (status === "Running") counts.running++
-      else if (status === "Idle") counts.idle++
-      else if (status === "Stopped") counts.stopped++
-      else if (status === "Offline") counts.offline++
+  // Filter and sort vehicles based on selected filters
+  const filteredVehicles = useMemo(() => {
+    let filtered = vehicles
+
+    // Filter by vehicle number
+    if (vehicleNumberFilter) {
+      filtered = filtered.filter(vehicle => {
+        const vehicleNo = vehicle.vehicleNo || `KWS${vehicle.vehicleId.slice(-4)}`
+        return vehicleNo === vehicleNumberFilter
+      })
+    }
+
+    // Filter by status
+    if (statusFilter) {
+      filtered = filtered.filter(vehicle => {
+        const status = getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
+        return status.toLowerCase() === statusFilter.toLowerCase()
+      })
+    }
+
+    // Sort by status priority: Running > Idle > Stopped > Offline
+    const statusPriority = {
+      'Running': 1,
+      'Idle': 2,
+      'Stopped': 3,
+      'Offline': 4
+    }
+
+    filtered = filtered.sort((a, b) => {
+      const statusA = getVehicleStatus(a.ignition, a.speed, a.TrackDateTime)
+      const statusB = getVehicleStatus(b.ignition, b.speed, b.TrackDateTime)
+      const priorityA = statusPriority[statusA] || 5
+      const priorityB = statusPriority[statusB] || 5
+      
+      // Primary sort by status priority
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB
+      }
+      
+      // Secondary sort by vehicle number for consistent ordering within same status
+      const vehicleNoA = a.vehicleNo || `KWS${a.vehicleId.slice(-4)}`
+      const vehicleNoB = b.vehicleNo || `KWS${b.vehicleId.slice(-4)}`
+      return vehicleNoA.localeCompare(vehicleNoB)
     })
-    return counts
+
+    return filtered
+  }, [vehicles, vehicleNumberFilter, statusFilter])
+
+  // Function to update map view based on filtered vehicles
+  const updateMapView = useCallback((filteredVehicles) => {
+    if (filteredVehicles.length === 0) {
+      setViewState(prev => ({
+        ...prev,
+        longitude: 46.7167,
+        latitude: 24.6333,
+        zoom: 8,
+        transitionDuration: 1000
+      }))
+      return
+    }
+
+    if (filteredVehicles.length === 1) {
+      // Single vehicle - center on it with moderate zoom
+      const vehicle = filteredVehicles[0]
+      setViewState(prev => ({
+        ...prev,
+        longitude: parseFloat(vehicle.longitude),
+        latitude: parseFloat(vehicle.latitude),
+        zoom: 10,
+        transitionDuration: 1000
+      }))
+      return
+    }
+
+    // Multiple vehicles - calculate bounds to show all vehicles
+    const lats = filteredVehicles.map(v => parseFloat(v.latitude))
+    const lngs = filteredVehicles.map(v => parseFloat(v.longitude))
+    
+    const minLat = Math.min(...lats)
+    const maxLat = Math.max(...lats)
+    const minLng = Math.min(...lngs)
+    const maxLng = Math.max(...lngs)
+    
+    const centerLat = (minLat + maxLat) / 2
+    const centerLng = (minLng + maxLng) / 2
+    
+    // Calculate appropriate zoom level based on the spread of vehicles
+    const latDiff = maxLat - minLat
+    const lngDiff = maxLng - minLng
+    const maxDiff = Math.max(latDiff, lngDiff)
+    
+    let zoom = 6 // default zoom (much broader view)
+    if (maxDiff > 10) zoom = 5
+    else if (maxDiff > 5) zoom = 5
+    else if (maxDiff > 2) zoom = 6
+    else if (maxDiff > 0.5) zoom = 8
+    else if (maxDiff > 0.1) zoom = 10
+    else zoom = 12
+    
+    setViewState(prev => ({
+      ...prev,
+      longitude: centerLng,
+      latitude: centerLat,
+      zoom: zoom,
+      transitionDuration: 1000
+    }))
   }, [])
 
-  const getSpeedColor = (speed) => {
-    const speedNum = parseFloat(speed)
-    if (speedNum === 0) return "text-gray-500"
-    if (speedNum < 30) return "text-yellow-500"
-    if (speedNum < 60) return "text-orange-500"
-    return "text-red-500"
+
+
+  // Update map view when filters change
+  useEffect(() => {
+    updateMapView(filteredVehicles)
+  }, [filteredVehicles, updateMapView])
+
+  // Loading state
+  if (loading && vehicles.length === 0) {
+    return (
+      <div className="h-screen flex items-center justify-center ">
+        <div className="flex flex-col items-center">
+          <Loader className='animate-spin'/>
+          <p className="text-gray-600">Loading vehicle data...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error && vehicles.length === 0) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Button onClick={fetchLiveData} className="bg-blue-600 hover:bg-blue-700">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="h-screen flex">
-      {/* Left Panel - Vehicle List */}
-      <div className="w-1/3 bg-white border-r overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900  ">Live Tracking</h1>
-              <p className="text-gray-600">Hello Chris, welcome back!</p>
-            </div>
-            <Button className="bg-purple-600 hover:bg-purple-700">
-              Action
+    <div className="">
+      {/* Header */}
+      <div className="p-4 border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-semibold">Live Tracking</h1>
+            <p className="text-sm text-muted-foreground">Real-time vehicle monitoring</p>
+          </div>
+          <div className='flex items-center gap-4'>
+            <Button 
+              onClick={fetchLiveData} 
+              disabled={loading}
+              size="sm"
+              className="hover:bg-gray-700 dark:hover:bg-gray-200"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
             </Button>
-          </div>
-
-          {/* Summary Cards */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Running</span>
-                </div>
-                <p className="text-2xl font-bold mt-2">{vehicleCounts.running}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Idle</span>
-                </div>
-                <p className="text-2xl font-bold mt-2">{vehicleCounts.idle}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Stopped</span>
-                </div>
-                <p className="text-2xl font-bold mt-2">{vehicleCounts.stopped}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Offline</span>
-                </div>
-                <p className="text-2xl font-bold mt-2">{vehicleCounts.offline}</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Vehicle List */}
-          <div className="space-y-3">
-            {dummyVehicles.map((vehicle) => (
-              <Card 
-                key={vehicle.vehicleId}
-                className={`cursor-pointer transition-colors hover:bg-gray-50 ${
-                  selectedVehicle?.vehicleId === vehicle.vehicleId ? 'ring-2 ring-blue-500 bg-blue-50' : ''
-                }`}
-                onClick={() => setSelectedVehicle(vehicle)}
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className='size-5' />
+                <SelectValue placeholder="Filter by Status" />
+              </SelectTrigger>
+              <SelectContent>
+                  <SelectItem value="running">Running</SelectItem>
+                  <SelectItem value="idle">Idle</SelectItem>
+                  <SelectItem value="stopped">Stopped</SelectItem>
+                  <SelectItem value="offline">Offline</SelectItem>
+              </SelectContent>
+            </Select>
+            <VehicleNumberFilter 
+              items={vehicleNumberOptions}
+              value={vehicleNumberFilter}
+              onValueChange={setVehicleNumberFilter}
+            />
+            {(vehicleNumberFilter || statusFilter) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setVehicleNumberFilter("")
+                  setStatusFilter("")
+                }}
+                className="flex items-center gap-2"
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <input 
-                        type="checkbox" 
-                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{vehicle.vehicleNo}</h3>
-                        <p className="text-sm text-gray-500">ID: {vehicle.vehicleId}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge 
-                        variant="secondary"
-                        className={getStatusBadgeColor(vehicle.ignition, vehicle.speed)}
-                      >
-                        {getVehicleStatus(vehicle.ignition, vehicle.speed)}
-                      </Badge>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        ⋯
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Gauge className="w-4 h-4 text-gray-400" />
-                      <span className={getSpeedColor(vehicle.speed)}>
-                        {vehicle.speed} km/h
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-gray-400" />
-                      <span>{vehicle.TrackDateTime.split(' ')[1]}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <DoorOpen className="w-4 h-4 text-gray-400" />
-                      <span className={vehicle.door === "Open" ? "text-red-600" : "text-green-600"}>
-                        {vehicle.door}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Weight className="w-4 h-4 text-gray-400" />
-                      <span>{vehicle.weight} kg</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                <X className="w-4 h-4" />
+                Clear Filters
+              </Button>
+            )}
+            
           </div>
         </div>
       </div>
 
-      {/* Right Panel - Map */}
-      <div className="flex-1 relative bg-gray-50">
-        {/* Map Header */}
-        <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg px-4 py-2 border border-gray-200">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Running: {vehicleCounts.running}</span>
+      {/* Vehicle Summary */}
+      <div className="mx-4 mb-4">
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Truck className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {filteredVehicles.length} vehicle{filteredVehicles.length !== 1 ? 's' : ''} visible
+              </span>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Idle: {vehicleCounts.idle}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Stopped: {vehicleCounts.stopped}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Offline: {vehicleCounts.offline}</span>
-            </div>
+            {vehicleNumberFilter && (
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                Filtered: {vehicleNumberFilter}
+              </Badge>
+            )}
+            {statusFilter && (
+              <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                Status: {statusFilter}
+              </Badge>
+            )}
+          </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {filteredVehicles.length > 0 ? (
+              `Showing ${filteredVehicles.length} of ${vehicles.length} total vehicles`
+            ) : (
+              'No vehicles match current filters'
+            )}
           </div>
         </div>
-        
-        <Map
-          ref={mapRef}
-          {...viewState}
-          onMove={evt => setViewState(evt.viewState)}
-          onClick={onMapClick}
-          mapStyle="https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
-          style={mapStyle}
-        >
-          {dummyVehicles.map((vehicle) => (
-            <Marker
-              key={vehicle.vehicleId}
-              longitude={vehicle.longitude}
-              latitude={vehicle.latitude}
-              anchor="bottom"
-              onClick={(event) => onMarkerClick(event, vehicle)}
-            >
-              <div className={`relative group cursor-pointer ${
-                selectedVehicle?.vehicleId === vehicle.vehicleId ? 'z-10' : 'z-0'
-              }`}>
-                {/* Pulse animation for running vehicles */}
-                {getVehicleStatus(vehicle.ignition, vehicle.speed) === "Running" && (
-                  <div className="absolute inset-0 w-12 h-12 bg-green-400 rounded-full animate-ping opacity-20"></div>
-                )}
-                
-                {/* Main marker */}
-                <div className={`relative w-10 h-10 rounded-full border-3 border-white shadow-xl flex items-center justify-center transform transition-all duration-200 hover:scale-110 ${
-                  getStatusColor(vehicle.ignition, vehicle.speed) === "bg-green-500" 
-                    ? 'bg-gradient-to-br from-green-500 to-green-600' 
-                    : getStatusColor(vehicle.ignition, vehicle.speed) === "bg-yellow-500"
-                    ? 'bg-gradient-to-br from-yellow-500 to-yellow-600'
-                    : getStatusColor(vehicle.ignition, vehicle.speed) === "bg-orange-500"
-                    ? 'bg-gradient-to-br from-orange-500 to-orange-600'
-                    : 'bg-gradient-to-br from-gray-500 to-gray-600'
-                } ${selectedVehicle?.vehicleId === vehicle.vehicleId ? 'ring-4 ring-blue-400 ring-opacity-50' : ''}`}>
-                  <Truck className="w-5 h-5 text-white drop-shadow-sm" />
-                </div>
-                
-                {/* Speed indicator */}
-                {parseFloat(vehicle.speed) > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-white rounded-full px-2 py-1 shadow-md border border-gray-200">
-                    <span className="text-xs font-bold text-gray-800">{vehicle.speed}</span>
-                  </div>
-                )}
-                
-                {/* Vehicle ID tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                  {vehicle.vehicleNo}
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                </div>
-              </div>
-            </Marker>
-          ))}
+      </div>
 
-          {selectedVehicle && (
-            <Popup
-              longitude={selectedVehicle.longitude}
-              latitude={selectedVehicle.latitude}
-              anchor="bottom"
-              onClose={() => setSelectedVehicle(null)}
-              closeButton={true}
-              closeOnClick={false}
-              className="max-w-sm"
-              style={{
-                borderRadius: '12px',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                border: 'none'
-              }}
-            >
-              <div className="p-6 bg-white rounded-xl">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      getStatusColor(selectedVehicle.ignition, selectedVehicle.speed)
-                    }`}></div>
-                    <div>
-                      <h3 className="font-bold text-lg text-gray-900">{selectedVehicle.vehicleNo}</h3>
-                      <p className="text-sm text-gray-500">ID: {selectedVehicle.vehicleId}</p>
-                    </div>
-                  </div>
-                  <Badge 
-                    variant="secondary"
-                    className={`px-3 py-1 text-xs font-semibold ${getStatusBadgeColor(selectedVehicle.ignition, selectedVehicle.speed)}`}
+      <div className='flex gap-5 px-5'>
+        {/* Left Panel - Vehicle List (40% width) */}
+        <div className="w-[45%] border rounded-lg flex flex-col h-[calc(100vh-240px)]">
+          {/* Table Header */}
+          <div className="px-4 py-3 bg-gray-50 dark:bg-neutral-900 rounded-lg">
+            <div className="grid grid-cols-5 gap-5 text-sm font-medium">
+              <div className="flex items-center ">
+                <input 
+                  type="checkbox" 
+                  checked={selectedVehicles.size === filteredVehicles.length && filteredVehicles.length > 0}
+                  onChange={handleSelectAll}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-2"
+                />
+                <p className='shrink-0'>Vehicle No</p>
+              </div>
+              <div>Updated At</div>
+              <div>Speed</div>
+              <div>Weight</div>
+              <div>Status</div>
+            </div>
+          </div>
+
+          {/* Vehicle List */}
+          <div className="flex-1 overflow-y-auto">
+            {filteredVehicles.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">
+                  {vehicles.length === 0 ? "No vehicles found" : "No vehicles match the selected filters"}
+                </p>
+              </div>
+            ) : (
+              filteredVehicles.map((vehicle) => {
+                const isSelected = selectedVehicles.has(vehicle.vehicleId)
+                
+                return (
+                  <div 
+                    key={vehicle.vehicleId}
+                    className={`px-4 py-3 border-b cursor-pointer transition-all duration-300 ${
+                                              selectedVehicle?.vehicleId === vehicle.vehicleId 
+                          ? `transform z-10 relative ${
+                              getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' 
+                                ? 'bg-green-500 border-green-600 text-white' 
+                                : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
+                                ? 'bg-yellow-500 border-yellow-600 text-white'
+                                : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
+                                ? 'bg-red-500 border-red-500 text-white'
+                                : 'bg-gray-400 border-gray-400 text-white'
+                            }` 
+                        : isSelected 
+                        ? 'bg-green-50 border-green-200 hover:bg-green-100' 
+                        : 'hover:bg-gray-50 dark:hover:bg-neutral-900'
+                    }`}
+                    onClick={() => {
+                      setSelectedVehicle(vehicle)
+                      // Focus map on the selected vehicle
+                      setViewState(prev => ({
+                        ...prev,
+                        longitude: parseFloat(vehicle.longitude),
+                        latitude: parseFloat(vehicle.latitude),
+                        zoom: 8,
+                        transitionDuration: 800
+                      }))
+                    }}
                   >
-                    {getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed)}
-                  </Badge>
-                </div>
-                
-                {/* Vehicle Image Placeholder */}
-                <div className="mb-4 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-4 text-center">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-2">
-                    <Truck className="w-8 h-8 text-white" />
-                  </div>
-                  <p className="text-xs text-gray-600">Vehicle {selectedVehicle.vehicleNo}</p>
-                </div>
-                
-                {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
-                    <Gauge className="w-4 h-4 text-blue-500" />
-                    <div>
-                      <p className="text-xs text-gray-500">Speed</p>
-                      <p className={`text-sm font-semibold ${getSpeedColor(selectedVehicle.speed)}`}>
-                        {selectedVehicle.speed} km/h
-                      </p>
+                    <div className="grid grid-cols-5 gap-6 items-center text-sm">
+                      {/* Vehicle No */}
+                      <div className="flex items-center">
+                        <input 
+                          type="checkbox" 
+                          checked={isSelected}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            handleVehicleSelect(vehicle.vehicleId)
+                          }}
+                          className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-2"
+                        />
+                        <span className="font-medium shrink-0 text-sm">{vehicle.vehicleNo || `KWS${vehicle.vehicleId.slice(-4)}`}</span>
+                      </div>
+                      
+                      {/* Track DateTime */}
+                      <div className="text-sm">
+                        {vehicle.TrackDateTime ? 
+                          new Date(vehicle.TrackDateTime).toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          }) : 'N/A'
+                        }
+                      </div>
+                      
+                      {/* Speed */}
+                      <div className="">
+                        <span className={`${
+                          selectedVehicle?.vehicleId === vehicle.vehicleId 
+                            ? 'text-white font-medium text-sm' 
+                            : parseFloat(vehicle.speed) > 0 
+                            ? 'text-green-600 font-medium text-sm' 
+                            : ''
+                        }`}>
+                          {vehicle.speed || '0'} km/h
+                        </span>
+                      </div>
+                      
+                      {/* Weight */}
+                      <div className="">
+                        {vehicle.weight ? `${vehicle.weight} kg` : 'N/A'}
+                      </div>
+                      
+                      {/* Status */}
+                      <div>
+                        <Badge 
+                          className={`
+                            text-xs font-medium px-2 py-1 rounded-md border
+                            ${selectedVehicle?.vehicleId === vehicle.vehicleId 
+                              ? 'text-white bg-white/20 border-white/30' 
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' 
+                              ? 'text-green-700 bg-green-100 border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800' 
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
+                              ? 'text-yellow-700 bg-yellow-100 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800'
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
+                              ? 'text-red-700 bg-red-100 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800'
+                              : 'text-gray-700 bg-gray-100 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-700'
+                            }
+                          `}
+                        >
+                          {getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
-                    <Weight className="w-4 h-4 text-purple-500" />
-                    <div>
-                      <p className="text-xs text-gray-500">Weight</p>
-                      <p className="text-sm font-semibold text-gray-900">{selectedVehicle.weight} kg</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
-                    <DoorOpen className="w-4 h-4 text-orange-500" />
-                    <div>
-                      <p className="text-xs text-gray-500">Door</p>
-                      <p className={`text-sm font-semibold ${
-                        selectedVehicle.door === "Open" ? "text-red-600" : "text-green-600"
-                      }`}>
-                        {selectedVehicle.door}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
-                    <Calendar className="w-4 h-4 text-green-500" />
-                    <div>
-                      <p className="text-xs text-gray-500">Expiry</p>
-                      <p className="text-sm font-semibold text-gray-900">{selectedVehicle.expiryDate}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Location */}
-                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                  <div className="flex items-start space-x-2">
-                    <MapPin className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Current Location</p>
-                      <p className="text-sm text-gray-700 leading-relaxed">{selectedVehicle.location}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Last Update */}
-                <div className="mb-4 p-2 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-gray-400" />
-                    <span className="text-xs text-gray-600">Last Update: {selectedVehicle.TrackDateTime}</span>
-                  </div>
-                </div>
-                
-                {/* Actions */}
-                <div className="flex space-x-2">
-                  <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
-                    View Details
-                  </Button>
-                  <Button size="sm" variant="outline" className="border-gray-300 hover:bg-gray-50">
-                    <MapPin className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </Popup>
-          )}
+                )
+              })
+            )}
+          </div>
+        </div>
 
-          <NavigationControl position="bottom-right" />
-          <FullscreenControl position="bottom-right" />
-        </Map>
+        {/* Right Panel - Map (60% width) */}
+        <div className="flex-1 relative rounded-4xl">
+          <Map
+            ref={mapRef}
+            {...viewState}
+            onMove={evt => setViewState(evt.viewState)}
+            onClick={onMapClick}
+            // mapStyle={isDarkMode 
+            //   ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+            //   : "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+            // }
+            mapStyle={"https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"}
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '32px',
+              overflow: 'hidden'
+            }}
+          >
+            {filteredVehicles.map((vehicle) => {
+              const isSelected = selectedVehicle?.vehicleId === vehicle.vehicleId
+              
+              return (
+                <Marker
+                  key={`${vehicle.vehicleId}-${vehicleNumberFilter}-${statusFilter}`}
+                  longitude={parseFloat(vehicle.longitude)}
+                  latitude={parseFloat(vehicle.latitude)}
+                  anchor="bottom"
+                  onClick={(event) => onMarkerClick(event, vehicle)}
+                >
+                  <div className={`relative group cursor-pointer ${isSelected ? 'z-10' : 'z-0'}`}>
+                    {/* Main marker */}
+                    <div className={`relative w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center transform transition-all duration-200 hover:scale-110 ${
+                      isSelected 
+                        ? `${getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)} ring-2 ring-opacity-50 ${
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' ? 'ring-green-300' :
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle' ? 'ring-yellow-300' :
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped' ? 'ring-red-300' :
+                            'ring-gray-300'
+                          }`
+                        : getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
+                    }`}>
+                      <Truck className="w-4 h-4 text-white" />
+                    </div>
+                    
+                    {/* Vehicle ID */}
+                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-1 rounded border border-gray-200 dark:border-gray-600 w-17">
+                      {vehicle.vehicleNo ? vehicle.vehicleNo : vehicle.vehicleId}
+                    </div>
+                  </div>
+                </Marker>
+              )
+            })}
+
+            {selectedVehicle && (
+              <Marker
+                key={`selected-${selectedVehicle.vehicleId}`}
+                longitude={parseFloat(selectedVehicle.longitude)}
+                latitude={parseFloat(selectedVehicle.latitude)}
+                anchor="bottom"
+              >
+                <Popover open={!!selectedVehicle} onOpenChange={(open) => !open && setSelectedVehicle(null)}>
+                  <PopoverTrigger asChild>
+                    <div className="w-0 h-0" />
+                  </PopoverTrigger>
+                  <PopoverContent 
+                    className="w-80 p-0 border-0 shadow-xl"
+                    side="top"
+                    align="center"
+                    sideOffset={10}
+                  >
+                    <div className="p-4 bg-white dark:bg-gray-800 rounded-xl">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                            <Truck className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                              {selectedVehicle.vehicleNo || `KWS${selectedVehicle.vehicleId.slice(-4)}`}
+                            </h3>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Vehicle ID: {selectedVehicle.vehicleId}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge 
+                          variant="outline" 
+                          className={`${
+                            getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Running' 
+                              ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800' 
+                              : getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Idle'
+                              ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800'
+                              : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600'
+                          }`}
+                        >
+                          {getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime)}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className={`w-2 h-2 rounded-full ${selectedVehicle.ignition === "1" ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">IGNITION</span>
+                          </div>
+                          <span className={`text-sm font-semibold ${selectedVehicle.ignition === "1" ? 'text-green-600' : 'text-red-600'}`}>
+                            {selectedVehicle.ignition === "1" ? 'ON' : 'OFF'}
+                          </span>
+                        </div>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">SPEED</span>
+                          </div>
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            {selectedVehicle.speed || '0'} km/h
+                          </span>
+                        </div>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">WEIGHT</span>
+                          </div>
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            {selectedVehicle.weight || 'N/A'} kg
+                          </span>
+                        </div>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className={`w-2 h-2 rounded-full ${selectedVehicle.door === "Open" ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">DOOR</span>
+                          </div>
+                          <span className={`text-sm font-semibold ${selectedVehicle.door === "Open" ? 'text-red-600' : 'text-green-600'}`}>
+                            {selectedVehicle.door || 'CLOSED'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex space-x-2">
+                        <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                          View Details
+                        </Button>
+                        <Button size="sm" variant="outline" className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                          <MapPin className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </Marker>
+            )}
+
+            <NavigationControl position="bottom-right" />
+            <FullscreenControl position="bottom-right" />
+          </Map>
+        </div>
       </div>
     </div>
   )

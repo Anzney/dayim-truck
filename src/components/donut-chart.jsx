@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes'
 
 const DonutChart = ({
   percentage = 0,
-  color = '#F59E0B',
+  color = '#fbb63f',
   trackColor = '#E5E7EB',
   width = 180,
   height = 100,
@@ -52,7 +52,7 @@ const DonutChart = ({
       </ResponsiveContainer>
       {showLabel && (
         <div
-          className="absolute left-9 translate-y-[90%] text-xl   tracking-tight font-semibold"
+          className="absolute left-8 translate-y-[90%] text-sm font-bold tracking-tight "
           style={{ top: labelTop }}
         >
           {safePercentage}% {labelText}
