@@ -2,6 +2,7 @@ import { LayoutDashboard, MapPinned, BotMessageSquare, Headset } from 'lucide-re
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
+import Image from 'next/image'
 
 const routes = [
   {
@@ -29,9 +30,7 @@ const routes = [
 const AppSidebar = () => {
   return (
     <div className='w-16 border-r h-screen px-2'>
-      <div className='p-6'>
-
-      </div>
+      <Image src="/dayim-logo.jpeg" height={30} width={30} className='mt-4 ml-2' />
       <div className='py-8 w-full flex flex-col items-center gap-5'>
         {
           routes.map((item) => {
