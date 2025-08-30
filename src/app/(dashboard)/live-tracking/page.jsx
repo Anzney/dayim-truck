@@ -81,7 +81,7 @@ const LiveTrackingPage = () => {
     fetchLiveData()
   }, [fetchLiveData])
 
-  // Auto-refresh every 30 seconds
+  // Auto-refresh every 30 second
   useEffect(() => {
     const interval = setInterval(() => {
       fetchLiveData()
@@ -120,19 +120,40 @@ const LiveTrackingPage = () => {
   }
 
   // Helper functions for data formatting
-  const getVehicleStatus = (ignition, speed) => {
+  const getVehicleStatus = (ignition, speed, trackDateTime) => {
     const speedNum = parseFloat(speed)
-    if (ignition === "0") return "Offline"
-    if (speedNum === 0) return "Idle"
-    if (speedNum > 0 && speedNum < 5) return "Stopped"
+    
+    // Check if vehicle is offline based on ignition, speed, and time conditions
+    if (ignition === "0" && speedNum === 0) {
+      if (!trackDateTime) return "Offline"
+      
+      const trackDate = new Date(trackDateTime)
+      const currentDate = new Date()
+      const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+      const trackDay = new Date(trackDate.getFullYear(), trackDate.getMonth(), trackDate.getDate())
+      
+      // Check if data is not from today
+      if (trackDay.getTime() !== today.getTime()) {
+        return "Offline"
+      }
+      
+      // Check if data is older than 10 minutes
+      const timeDifferenceInMinutes = (currentDate.getTime() - trackDate.getTime()) / (1000 * 60)
+      if (timeDifferenceInMinutes > 10) {
+        return "Offline"
+      }
+    }
+    
+    if (speedNum === 0 && ignition === "1") return "Idle"
+    if (speedNum === 0 && ignition === "0") return "Stopped"
     return "Running"
   }
 
-  const getStatusColor = (ignition, speed) => {
-    const speedNum = parseFloat(speed)
-    if (ignition === "0") return "bg-gray-500"
-    if (speedNum === 0) return "bg-yellow-500"
-    if (speedNum > 0 && speedNum < 5) return "bg-orange-500"
+  const getStatusColor = (ignition, speed, trackDateTime) => {
+    const status = getVehicleStatus(ignition, speed, trackDateTime)
+    if (status === "Offline") return "bg-gray-500"
+    if (status === "Idle") return "bg-yellow-500"
+    if (status === "Stopped") return "bg-red-500"
     return "bg-green-500"
   }
 
@@ -153,7 +174,7 @@ const LiveTrackingPage = () => {
     return uniqueVehicles.sort((a, b) => a.label.localeCompare(b.label))
   }, [vehicles])
 
-  // Filter vehicles based on selected filters
+  // Filter and sort vehicles based on selected filters
   const filteredVehicles = useMemo(() => {
     let filtered = vehicles
 
@@ -168,10 +189,35 @@ const LiveTrackingPage = () => {
     // Filter by status
     if (statusFilter) {
       filtered = filtered.filter(vehicle => {
-        const status = getVehicleStatus(vehicle.ignition, vehicle.speed)
+        const status = getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
         return status.toLowerCase() === statusFilter.toLowerCase()
       })
     }
+
+    // Sort by status priority: Running > Idle > Stopped > Offline
+    const statusPriority = {
+      'Running': 1,
+      'Idle': 2,
+      'Stopped': 3,
+      'Offline': 4
+    }
+
+    filtered = filtered.sort((a, b) => {
+      const statusA = getVehicleStatus(a.ignition, a.speed, a.TrackDateTime)
+      const statusB = getVehicleStatus(b.ignition, b.speed, b.TrackDateTime)
+      const priorityA = statusPriority[statusA] || 5
+      const priorityB = statusPriority[statusB] || 5
+      
+      // Primary sort by status priority
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB
+      }
+      
+      // Secondary sort by vehicle number for consistent ordering within same status
+      const vehicleNoA = a.vehicleNo || `KWS${a.vehicleId.slice(-4)}`
+      const vehicleNoB = b.vehicleNo || `KWS${b.vehicleId.slice(-4)}`
+      return vehicleNoA.localeCompare(vehicleNoB)
+    })
 
     return filtered
   }, [vehicles, vehicleNumberFilter, statusFilter])
@@ -361,26 +407,25 @@ const LiveTrackingPage = () => {
         </div>
       </div>
 
-      <div className='flex gap-10'>
+      <div className='flex gap-5 px-5'>
         {/* Left Panel - Vehicle List (40% width) */}
-        <div className="w-2/5 border-r rounded-r-lg flex flex-col h-[calc(100vh-240px)]">
+        <div className="w-[45%] border rounded-lg flex flex-col h-[calc(100vh-240px)]">
           {/* Table Header */}
-          <div className="px-4 py-3 bg-gray-50 dark:bg-neutral-900 rounded-tr-lg border-b border-t">
-            <div className="grid grid-cols-6 gap-4 text-sm font-medium">
-              <div className="flex items-center">
+          <div className="px-4 py-3 bg-gray-50 dark:bg-neutral-900 rounded-lg">
+            <div className="grid grid-cols-5 gap-5 text-sm font-medium">
+              <div className="flex items-center ">
                 <input 
                   type="checkbox" 
                   checked={selectedVehicles.size === filteredVehicles.length && filteredVehicles.length > 0}
                   onChange={handleSelectAll}
                   className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-2"
                 />
-                Vehicle No
+                <p className='shrink-0'>Vehicle No</p>
               </div>
-              <div>Track DateTime</div>
+              <div>Updated At</div>
               <div>Speed</div>
-              <div>Ignition</div>
               <div>Weight</div>
-              <div>Door</div>
+              <div>Status</div>
             </div>
           </div>
 
@@ -399,8 +444,20 @@ const LiveTrackingPage = () => {
                 return (
                   <div 
                     key={vehicle.vehicleId}
-                    className={`px-4 py-3 border-b hover:bg-gray-50 dark:hover:bg-neutral-900 cursor-pointer transition-colors ${
-                      isSelected ? 'bg-green-50 border-green-200' : ''
+                    className={`px-4 py-3 border-b cursor-pointer transition-all duration-300 ${
+                                              selectedVehicle?.vehicleId === vehicle.vehicleId 
+                          ? `transform z-10 relative ${
+                              getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' 
+                                ? 'bg-green-500 border-green-600 text-white' 
+                                : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
+                                ? 'bg-yellow-500 border-yellow-600 text-white'
+                                : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
+                                ? 'bg-red-500 border-red-500 text-white'
+                                : 'bg-gray-400 border-gray-400 text-white'
+                            }` 
+                        : isSelected 
+                        ? 'bg-green-50 border-green-200 hover:bg-green-100' 
+                        : 'hover:bg-gray-50 dark:hover:bg-neutral-900'
                     }`}
                     onClick={() => {
                       setSelectedVehicle(vehicle)
@@ -414,7 +471,7 @@ const LiveTrackingPage = () => {
                       }))
                     }}
                   >
-                    <div className="grid grid-cols-6 gap-4 items-center text-sm">
+                    <div className="grid grid-cols-5 gap-6 items-center text-sm">
                       {/* Vehicle No */}
                       <div className="flex items-center">
                         <input 
@@ -426,11 +483,11 @@ const LiveTrackingPage = () => {
                           }}
                           className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-2"
                         />
-                        <span className="font-medium ">{vehicle.vehicleNo || `KWS${vehicle.vehicleId.slice(-4)}`}</span>
+                        <span className="font-medium shrink-0 text-sm">{vehicle.vehicleNo || `KWS${vehicle.vehicleId.slice(-4)}`}</span>
                       </div>
                       
                       {/* Track DateTime */}
-                      <div className="">
+                      <div className="text-sm">
                         {vehicle.TrackDateTime ? 
                           new Date(vehicle.TrackDateTime).toLocaleString('en-GB', {
                             day: '2-digit',
@@ -444,15 +501,15 @@ const LiveTrackingPage = () => {
                       
                       {/* Speed */}
                       <div className="">
-                        <span className={parseFloat(vehicle.speed) > 0 ? 'text-green-600 font-medium' : ''}>
+                        <span className={`${
+                          selectedVehicle?.vehicleId === vehicle.vehicleId 
+                            ? 'text-white font-medium text-sm' 
+                            : parseFloat(vehicle.speed) > 0 
+                            ? 'text-green-600 font-medium text-sm' 
+                            : ''
+                        }`}>
                           {vehicle.speed || '0'} km/h
                         </span>
-                      </div>
-                      
-                      {/* Ignition */}
-                      <div className="flex items-center">
-                        <div className={`w-2 h-2 rounded-full mr-2 ${vehicle.ignition === "1" ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                        <span className="">{vehicle.ignition === "1" ? 'On' : 'Off'}</span>
                       </div>
                       
                       {/* Weight */}
@@ -460,11 +517,25 @@ const LiveTrackingPage = () => {
                         {vehicle.weight ? `${vehicle.weight} kg` : 'N/A'}
                       </div>
                       
-                      {/* Door */}
-                      <div className="flex items-center">
-                        <span className={`font-medium ${vehicle.door === "Open" ? 'text-red-600' : 'text-green-600'}`}>
-                          {vehicle.door || 'Closed'}
-                        </span>
+                      {/* Status */}
+                      <div>
+                        <Badge 
+                          className={`
+                            text-xs font-medium px-2 py-1 rounded-md border
+                            ${selectedVehicle?.vehicleId === vehicle.vehicleId 
+                              ? 'text-white bg-white/20 border-white/30' 
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' 
+                              ? 'text-green-700 bg-green-100 border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800' 
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
+                              ? 'text-yellow-700 bg-yellow-100 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800'
+                              : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
+                              ? 'text-red-700 bg-red-100 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800'
+                              : 'text-gray-700 bg-gray-100 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-700'
+                            }
+                          `}
+                        >
+                          {getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)}
+                        </Badge>
                       </div>
                     </div>
                   </div>
@@ -475,16 +546,17 @@ const LiveTrackingPage = () => {
         </div>
 
         {/* Right Panel - Map (60% width) */}
-        <div className="flex-1 relative pr-10 pb-8 rounded-4xl">
+        <div className="flex-1 relative rounded-4xl">
           <Map
             ref={mapRef}
             {...viewState}
             onMove={evt => setViewState(evt.viewState)}
             onClick={onMapClick}
-            mapStyle={isDarkMode 
-              ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-              : "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
-            }
+            // mapStyle={isDarkMode 
+            //   ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+            //   : "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+            // }
+            mapStyle={"https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"}
             style={{
               width: '100%',
               height: '100%',
@@ -507,8 +579,13 @@ const LiveTrackingPage = () => {
                     {/* Main marker */}
                     <div className={`relative w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center transform transition-all duration-200 hover:scale-110 ${
                       isSelected 
-                        ? 'bg-green-500 ring-2 ring-green-300' 
-                        : 'bg-blue-500'
+                        ? `${getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)} ring-2 ring-opacity-50 ${
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' ? 'ring-green-300' :
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle' ? 'ring-yellow-300' :
+                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped' ? 'ring-red-300' :
+                            'ring-gray-300'
+                          }`
+                        : getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
                     }`}>
                       <Truck className="w-4 h-4 text-white" />
                     </div>
@@ -557,14 +634,14 @@ const LiveTrackingPage = () => {
                         <Badge 
                           variant="outline" 
                           className={`${
-                            getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed) === 'Running' 
+                            getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Running' 
                               ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800' 
-                              : getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed) === 'Idle'
+                              : getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Idle'
                               ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800'
                               : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600'
                           }`}
                         >
-                          {getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed)}
+                          {getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime)}
                         </Badge>
                       </div>
                       
