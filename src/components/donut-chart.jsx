@@ -52,10 +52,11 @@ const DonutChart = ({
       </ResponsiveContainer>
       {showLabel && (
         <div
-          className="absolute left-8 translate-y-[90%] text-sm font-bold tracking-tight "
+          className="absolute left-28 translate-y-[30%]"
           style={{ top: labelTop }}
         >
-          {safePercentage}% {labelText}
+          <div className='uppercase text-lg'>{labelText}</div>
+          <div className='font-bold text-4xl'>{safePercentage}%</div>
         </div>
       )}
     </div>

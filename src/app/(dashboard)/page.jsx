@@ -453,7 +453,7 @@ const page = () => {
 
 
   return (
-    <div className='p-6 pb-4 flex gap-4 dark:bg-black'>
+    <div className='p-4 pb-4 flex gap-4 dark:bg-black'>
       
         <KpiHeaderCards />
         {/* <div className="grid grid-cols-2 gap-4">
@@ -490,7 +490,7 @@ const page = () => {
             </div>
           </div>
         </div> */}
-      <div className="w-1/3 flex-shrink-0">
+      <div className="w-1/3">
         <div className='min-h-[80vh] w-full'>
           <div className='border rounded-2xl h-[87vh] flex flex-col w-full dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-netural-800/40 dark:backdrop-blur-2xl'>
             {/* Header */}
