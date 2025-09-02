@@ -241,6 +241,25 @@ const CompactMap = () => {
             <NavigationControl position="bottom-right" showCompass={false} />
           </Map>
         )}
+
+        <div className='flex items-center gap-4 justify-between absolute top-4 left-8 px-4 rounded-xl h-10 z-20 flex-shrink-0 bg-white '>
+          <div className='rounded-lg flex gap-4'>
+            <div className='flex items-center gap-2'>
+              <div className='h-2 w-2 rounded-full bg-[#10B981]'></div>
+              <p className='  text-xs tracking-tight'>Running</p>
+            </div>
+
+            <div className='flex items-center gap-2'>
+              <div className='h-2 w-2 rounded-full bg-amber-400'></div>
+              <p className='  text-xs tracking-tight'>Idle</p>
+            </div>
+
+            <div className='flex items-center gap-2'>
+              <div className='h-2 w-2 rounded-full bg-gray-400'></div>
+              <p className='  text-xs tracking-tight'>Stopped</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

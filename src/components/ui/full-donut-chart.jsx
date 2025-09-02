@@ -24,7 +24,7 @@ const FullDonutChart = ({
         fill="white" 
         textAnchor="middle" 
         dominantBaseline="central"
-        fontSize={11}
+        fontSize={10}
         fontWeight="bold"
         style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
       >
