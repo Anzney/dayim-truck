@@ -55,7 +55,7 @@ const upcomingMaintenance = [
 const aiMaintenanceInsights = [
   {
     id: 1,
-    title: "AI predicts Truck T-087 brake pads will need replacement in 5 days based on usage patterns."
+    title: "AI predicts Truck 4297-NEB brake pads will need replacement in 5 days based on usage patterns."
   },
   {
     id: 2,

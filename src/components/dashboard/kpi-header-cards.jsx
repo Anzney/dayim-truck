@@ -27,11 +27,11 @@ const alertCards = [
 
 const KpiHeaderCards = () => {
   return (
-    <div className='grid grid-cols-4 gap-4 max-h-[calc(100svh-100px)] overflow-y-scroll'>
+    <div className='grid grid-cols-4 gap-4 max-h-[calc(100svh-100px)] flex-1 overflow-y-scroll'>
       {/* KPI Card 1 */}
       <div className='p-3 rounded-2xl border backdrop-blur-3xl dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-netural-800/40 dark:backdrop-blur-2xl'>
-        <p className='font-semibold text-muted-foreground 2xl:text-3xl'>Total Fleets</p>
-        <p className='text-4xl tabular-nums   font-bold dark:text-[#e2e2e2] 2xl:text-6xl'>24</p>
+        <p className='font-semibold text-muted-foreground '>Total Fleets</p>
+        <p className='text-4xl tabular-nums   font-bold dark:text-[#e2e2e2] '>24</p>
         {/* <p className="text-sm mt-6 2xl:text-2xl">
           Overall fleet strength across operations
         </p> */}
@@ -69,9 +69,9 @@ const KpiHeaderCards = () => {
       </div>
       {/* KPI Card 2 */}
       <div className='p-3 rounded-2xl border  dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-netural-800/40 dark:backdrop-blur-2xl'>
-        <p className='font-semibold text-muted-foreground 2xl:text-3xl'>Vehicle Off Road</p>
+        <p className='font-semibold text-muted-foreground'>Vehicle Off Road</p>
         <div className='flex justify-between items-start'>
-          <p className='text-4xl space-y-1.5 tabular-nums   font-bold dark:text-[#e2e2e2] 2xl:text-6xl'>4</p>
+          <p className='text-4xl space-y-1.5 tabular-nums   font-bold dark:text-[#e2e2e2]'>4</p>
           {/* <div className='py-0.5 px-1 border flex gap-1 items-center rounded'>
             <TrendingUp className='size-4'/>
             <p className='text-xs 2xl:text-xl'>10%</p>
