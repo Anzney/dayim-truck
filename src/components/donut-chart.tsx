@@ -57,7 +57,7 @@ const DonutChart = ({
             isAnimationActive={true}
             stroke="none"
           >
-            <Cell key="filled" fill={color} cornerRadius={0} />
+            <Cell key="filled" fill={color} />
             <Cell key="remaining" fill={effectiveTrackColor} />
           </Pie>
         </PieChart>

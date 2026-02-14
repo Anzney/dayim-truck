@@ -92,7 +92,7 @@ const LoadUtilizationChart = () => {
               <LabelList
                 dataKey="underload"
                 position="top"
-                formatter={(value: number) => Math.abs(value)}
+                formatter={(value: any) => Math.abs(Number(value))}
                 style={{ fontSize: 12, fill: '#6b7280' }}
               />
             </Bar>

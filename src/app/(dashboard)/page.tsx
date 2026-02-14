@@ -207,7 +207,7 @@ const DashboardPage = () => {
                   <div className='flex items-center justify-between pb-2 border-b'>
                     <div className='flex items-center gap-2'>
                       <Lightbulb className='size-4 text-amber-500' />
-                      <h3 className='text-sm font-semibold'>Today's AI Insights</h3>
+                      <h3 className='text-sm font-semibold'>Today &apos;s AI Insights</h3>
                     </div>
                     <button
                       onClick={() => setShowInsights(false)}
@@ -232,7 +232,7 @@ const DashboardPage = () => {
 
                   <div className='mt-4 p-3 bg-blue-50 dark:bg-blue-400/20 rounded-lg border border-blue-200 dark:border-blue-200/20'>
                     <p className='text-xs text-blue-700 dark:text-blue-200'>
-                      💡 These insights are generated from your fleet's real-time data and help optimize operations, reduce costs, and improve efficiency.
+                      💡 These insights are generated from your fleet&apos;s real-time data and help optimize operations, reduce costs, and improve efficiency.
                     </p>
                   </div>
                 </div>
@@ -245,10 +245,10 @@ const DashboardPage = () => {
                   >
                     <div className='flex items-center gap-2'>
                       <Sparkles className='size-3 text-blue-600 dark:text-blue-200' />
-                      <h3 className='text-xs font-semibold text-blue-800 dark:text-blue-200'>Today's AI Insights</h3>
+                      <h3 className='text-xs font-semibold text-blue-800 dark:text-blue-200'>Today&apos;s AI Insights</h3>
                     </div>
                     <p className='text-xs text-blue-700 dark:text-blue-200 mt-1'>
-                      Click here to get today's fleet-related insights.
+                      Click here to get today&apos;s fleet-related insights.
                     </p>
                   </div>
 
@@ -264,8 +264,8 @@ const DashboardPage = () => {
                           key={item.id}
                           onClick={() => handleQuestionClick(item)}
                           className={`px-3 py-1.5 rounded-full text-xs border transition-all duration-200 ${selectedQuestion?.id === item.id
-                              ? 'bg-blue-600 text-white border-blue-600'
-                              : 'border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-neutral-800'
                             }`}
                         >
                           {item.question}
@@ -287,8 +287,8 @@ const DashboardPage = () => {
                           }`}
                       >
                         <div className={`p-2 rounded-full ${message.type === 'user'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 dark:bg-neutral-700'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 dark:bg-neutral-700'
                           }`}>
                           {message.type === 'user' ? (
                             <User className='size-4' />
@@ -298,8 +298,8 @@ const DashboardPage = () => {
                         </div>
                         <div
                           className={`p-3 rounded-lg ${message.type === 'user'
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-50 dark:bg-neutral-800 border'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-50 dark:bg-neutral-800 border'
                             }`}
                         >
                           <p className={`text-sm whitespace-pre-line ${message.type === 'user' ? 'text-white' : 'text-gray-900 dark:text-gray-100'

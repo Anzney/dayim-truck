@@ -36,7 +36,7 @@ const LiveTrackingPage = () => {
   const [statusFilter, setStatusFilter] = useState("")
   const { theme, resolvedTheme } = useTheme()
 
-  const mapRef = useRef<any>()
+  const mapRef = useRef<any>(null)
 
   // Determine if dark mode is active
   const isDarkMode = resolvedTheme === 'dark'
@@ -434,17 +434,17 @@ const LiveTrackingPage = () => {
                   <div
                     key={vehicle.vehicleId}
                     className={`px-4 py-3 border-b cursor-pointer transition-all duration-300 ${selectedVehicle?.vehicleId === vehicle.vehicleId
-                        ? `transform z-10 relative ${getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running'
-                          ? 'bg-green-500 border-green-600 text-white'
-                          : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
-                            ? 'bg-yellow-500 border-yellow-600 text-white'
-                            : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
-                              ? 'bg-red-500 border-red-500 text-white'
-                              : 'bg-gray-400 border-gray-400 text-white'
-                        }`
-                        : isSelected
-                          ? 'bg-green-50 border-green-200 hover:bg-green-100'
-                          : 'hover:bg-gray-50 dark:hover:bg-neutral-900'
+                      ? `transform z-10 relative ${getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running'
+                        ? 'bg-green-500 border-green-600 text-white'
+                        : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle'
+                          ? 'bg-yellow-500 border-yellow-600 text-white'
+                          : getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped'
+                            ? 'bg-red-500 border-red-500 text-white'
+                            : 'bg-gray-400 border-gray-400 text-white'
+                      }`
+                      : isSelected
+                        ? 'bg-green-50 border-green-200 hover:bg-green-100'
+                        : 'hover:bg-gray-50 dark:hover:bg-neutral-900'
                       }`}
                     onClick={() => {
                       setSelectedVehicle(vehicle)
@@ -488,10 +488,10 @@ const LiveTrackingPage = () => {
                       {/* Speed */}
                       <div className="">
                         <span className={`${selectedVehicle?.vehicleId === vehicle.vehicleId
-                            ? 'text-white font-medium text-sm'
-                            : parseFloat(vehicle.speed) > 0
-                              ? 'text-green-600 font-medium text-sm'
-                              : ''
+                          ? 'text-white font-medium text-sm'
+                          : parseFloat(vehicle.speed) > 0
+                            ? 'text-green-600 font-medium text-sm'
+                            : ''
                           }`}>
                           {vehicle.speed || '0'} km/h
                         </span>
@@ -560,12 +560,12 @@ const LiveTrackingPage = () => {
                   <div className={`relative group cursor-pointer ${isSelected ? 'z-10' : 'z-0'}`}>
                     {/* Main marker */}
                     <div className={`relative w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center transform transition-all duration-200 hover:scale-110 ${isSelected
-                        ? `${getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)} ring-2 ring-opacity-50 ${getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' ? 'ring-green-300' :
-                          getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle' ? 'ring-yellow-300' :
-                            getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped' ? 'ring-red-300' :
-                              'ring-gray-300'
-                        }`
-                        : getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
+                      ? `${getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)} ring-2 ring-opacity-50 ${getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Running' ? 'ring-green-300' :
+                        getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Idle' ? 'ring-yellow-300' :
+                          getVehicleStatus(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime) === 'Stopped' ? 'ring-red-300' :
+                            'ring-gray-300'
+                      }`
+                      : getStatusColor(vehicle.ignition, vehicle.speed, vehicle.TrackDateTime)
                       }`}>
                       <Truck className="w-4 h-4 text-white" />
                     </div>
@@ -614,10 +614,10 @@ const LiveTrackingPage = () => {
                         <Badge
                           variant="outline"
                           className={`${getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Running'
-                              ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-                              : getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Idle'
-                                ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800'
-                                : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600'
+                            ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+                            : getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime) === 'Idle'
+                              ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800'
+                              : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600'
                             }`}
                         >
                           {getVehicleStatus(selectedVehicle.ignition, selectedVehicle.speed, selectedVehicle.TrackDateTime)}

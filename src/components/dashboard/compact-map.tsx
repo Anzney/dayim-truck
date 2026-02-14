@@ -16,7 +16,7 @@ const CompactMap = () => {
     latitude: 24.7136,    // Riyadh latitude
     zoom: 8               // broader view to show more area
   })
-  const mapRef = useRef<any>()
+  const mapRef = useRef<any>(null)
 
   // Function to update map view based on vehicles
   const updateMapView = useCallback((validVehicles: Vehicle[]) => {
