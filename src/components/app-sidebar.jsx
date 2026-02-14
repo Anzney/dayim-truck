@@ -1,4 +1,4 @@
-import { LayoutDashboard, MapPinned, BotMessageSquare, Headset } from 'lucide-react'
+import { LayoutDashboard, MapPinned, BotMessageSquare, Headset, Fuel } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
@@ -17,11 +17,16 @@ const routes = [
   },
   {
     id: 3,
+    icon: <Fuel className='size-5' />,
+    href: "/fuel-analytics"
+  },
+  {
+    id: 4,
     icon: <BotMessageSquare className="size-5" />,
     href: "/dayimGPT"
   },
   {
-    id: 4,
+    id: 5,
     icon: <Headset className='size-5' />,
     href: "/customer-support"
   }
