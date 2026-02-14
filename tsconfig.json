@@ -6,33 +6,35 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "strict": true,
     "skipLibCheck": true,
-    "strict": false,
     "noEmit": true,
-    "incremental": true,
     "module": "esnext",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "incremental": true,
+    "allowJs": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    ]
   },
   "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/app/(dashboard)/dayimGPT/page.jsx", "src/app/(dashboard)/live-tracking/page.jsx"  ],
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
