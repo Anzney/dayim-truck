@@ -1,4 +1,4 @@
-import { LayoutDashboard, MapPinned, BotMessageSquare, Headset, Fuel, Settings, Wrench } from 'lucide-react'
+import { LayoutDashboard, MapPinned, BotMessageSquare, Headset, Fuel, Settings, Wrench, Users } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
@@ -35,6 +35,11 @@ const routes: Route[] = [
     id: 5,
     icon: <Wrench className='size-5' />,
     href: "/maintenance"
+  },
+  {
+    id: 8,
+    icon: <Users className='size-5' />,
+    href: "/drivers"
   },
   {
     id: 6,
