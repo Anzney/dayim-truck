@@ -28,13 +28,13 @@ const statusStyles = {
 
 export function MaintenanceSchedule() {
   return (
-    <div className="bg-[#0b0e14] rounded-2xl p-6 shadow-xl border border-[#1e2235]/30">
-      <h2 className="text-xl font-bold text-white mb-6">Maintenance Schedule</h2>
+    <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-6 shadow-xl">
+      <h2 className="text-xl font-bold text-foreground mb-6">Maintenance Schedule</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="text-[#94a3b8] text-sm uppercase tracking-wider border-b border-[#1e2235]/50">
-              <th className="pb-4 font-semibold px-4">ID</th>
+            <tr className="text-muted-foreground text-xs uppercase tracking-wider border-b border-border">
+              <th className="pb-4 font-semibold px-4 tracking-tighter">ID</th>
               <th className="pb-4 font-semibold px-4">Vehicle</th>
               <th className="pb-4 font-semibold px-4">Service</th>
               <th className="pb-4 font-semibold px-4">Date</th>
@@ -42,36 +42,36 @@ export function MaintenanceSchedule() {
               <th className="pb-4 font-semibold px-4">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#1e2235]/30">
+          <tbody className="divide-y divide-border">
             {scheduleData.map((item) => (
               <tr
                 key={item.id}
                 className="group relative hover:bg-[#161b22] transition-all duration-300 cursor-pointer overflow-hidden border-l-2 border-transparent hover:border-[#00d1ff]/50"
               >
-                <td className="py-4 px-4 text-[#00d1ff] font-bold group-hover:translate-x-1 transition-transform duration-300">
+                <td className="py-4 px-4 text-blue-500 font-bold group-hover:translate-x-1 transition-transform duration-300">
                   <div className="flex flex-col">
                     <span>M-</span>
                     <span>{item.id.split('-')[1]}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4 text-white font-medium group-hover:text-[#00d1ff] transition-colors">{item.vehicle}</td>
-                <td className="py-4 px-4 text-[#94a3b8] group-hover:text-white transition-colors duration-300">
+                <td className="py-4 px-4 text-foreground font-medium group-hover:text-blue-500 transition-colors">{item.vehicle}</td>
+                <td className="py-4 px-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300">
                   {item.service}
                 </td>
                 <td className="py-4 px-4">
                   <div className="flex flex-col group-hover:scale-105 transition-transform origin-left text-xs">
-                    <span className="text-white font-bold">{item.date.split('-')[0]}</span>
-                    <span className="text-[#94a3b8]">{item.date.split('-').slice(1).join('-')}</span>
+                    <span className="text-foreground font-bold">{item.date.split('-')[0]}</span>
+                    <span className="text-muted-foreground">{item.date.split('-').slice(1).join('-')}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4 text-white font-black group-hover:text-[#00d1ff] transition-colors">${item.cost}</td>
+                <td className="py-4 px-4 text-foreground font-black group-hover:text-blue-500 transition-colors">${item.cost}</td>
                 <td className="py-4 px-4">
                   <Badge variant="outline" className={`${statusStyles[item.status]} font-bold px-3 py-1 rounded-full transition-all duration-300 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.05)]`}>
                     {item.status}
                   </Badge>
                 </td>
                 {/* Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#00d1ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </tr>
             ))}
           </tbody>

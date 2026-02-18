@@ -8,7 +8,7 @@ import { VehicleHealthSummary } from "./vehicle-health-summary";
 
 export function MaintenanceDashboard() {
   return (
-    <div className="p-6 space-y-6 min-h-screen bg-[#020617]">
+    <div className="p-6 space-y-6 min-h-screen bg-background text-foreground">
       <MaintenanceHeader />
       <MaintenanceKPIs />
 
@@ -19,7 +19,7 @@ export function MaintenanceDashboard() {
         </div>
 
         {/* Right Column: Combined Fault Codes & Health Summary */}
-        <div className="xl:col-span-5 bg-[#0b0e14] rounded-2xl p-6 shadow-xl border border-[#1e2235]/30 space-y-8">
+        <div className="xl:col-span-5 rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-6 shadow-xl space-y-8">
           <ActiveFaultCodes />
           <VehicleHealthSummary />
         </div>

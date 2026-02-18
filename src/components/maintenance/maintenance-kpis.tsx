@@ -12,13 +12,13 @@ interface KPICardProps {
 
 function KPICard({ title, value, icon: Icon, iconColor, borderColor }: KPICardProps) {
   return (
-    <div className={`bg-[#0b0e14] border-l-4 ${borderColor} p-5 rounded-xl flex items-center justify-between group hover:bg-[#161b22] transition-all duration-300 transform hover:-translate-y-1 shadow-lg`}>
+    <div className={`rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-5 flex items-center justify-between group hover:scale-[1.02] transition-all duration-300 shadow-lg`}>
       <div className="space-y-1">
-        <p className="text-[#94a3b8] text-sm font-medium">{title}</p>
-        <p className="text-3xl font-bold text-white">{value}</p>
+        <p className="text-muted-foreground text-sm font-medium">{title}</p>
+        <p className="text-3xl font-bold dark:text-[#e2e2e2] text-foreground">{value}</p>
       </div>
-      <div className={`p-3 rounded-xl bg-opacity-10 transition-colors duration-300 ${iconColor}`}>
-        <Icon className="w-6 h-6" />
+      <div className={`p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-border transition-colors duration-300 ${iconColor}`}>
+        <Icon className="w-5 h-5" />
       </div>
     </div>
   );
@@ -30,29 +30,29 @@ export function MaintenanceKPIs() {
       title: "Scheduled Services",
       value: 3,
       icon: Calendar,
-      iconColor: "text-[#00d1ff]",
-      borderColor: "border-[#00d1ff]",
+      iconColor: "text-blue-500",
+      borderColor: "border-blue-500",
     },
     {
       title: "Overdue",
       value: 1,
       icon: AlertTriangle,
-      iconColor: "text-[#ff4d4f]",
-      borderColor: "border-[#ff4d4f]",
+      iconColor: "text-red-500",
+      borderColor: "border-red-500",
     },
     {
       title: "Completed (Month)",
       value: 2,
       icon: CheckCircle,
-      iconColor: "text-[#52c41a]",
-      borderColor: "border-[#52c41a]",
+      iconColor: "text-green-500",
+      borderColor: "border-green-500",
     },
     {
       title: "Active Fault Codes",
       value: 3,
       icon: Wrench,
-      iconColor: "text-[#faad14]",
-      borderColor: "border-[#faad14]",
+      iconColor: "text-amber-500",
+      borderColor: "border-amber-500",
     },
   ];
 

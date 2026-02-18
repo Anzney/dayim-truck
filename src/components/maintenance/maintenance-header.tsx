@@ -10,10 +10,10 @@ export function MaintenanceHeader() {
       {/* Search Bar Row */}
       <div className="flex items-center justify-between">
         <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94a3b8]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search vehicles, drivers..."
-            className="bg-[#0b0e14] border-[#1e2235] pl-10 text-white placeholder:text-[#94a3b8] focus-visible:ring-[#00d1ff] focus-visible:border-[#00d1ff]"
+            className="bg-neutral-100 dark:bg-neutral-900 border-border pl-10 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
           />
         </div>
         <div className="flex items-center gap-4">
@@ -26,13 +26,13 @@ export function MaintenanceHeader() {
 
       {/* Title and Action Buttons Row */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Maintenance & Diagnostics</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Maintenance & Diagnostics</h1>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-[#1e2235] border-none text-[#94a3b8] hover:bg-[#2d334d] hover:text-white transition-all duration-300">
+          <Button variant="outline" className="border-border bg-neutral-100 dark:bg-neutral-900 text-muted-foreground hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-foreground">
             <Download className="w-4 h-4 mr-2" />
             Report
           </Button>
-          <Button className="bg-[#00d1ff] text-[#001529] font-bold hover:bg-[#00b8e6] transition-all duration-300 shadow-[0_0_15px_rgba(0,209,255,0.3)] border-none">
+          <Button className="bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md border-none">
             <Plus className="w-4 h-4 mr-2" />
             Schedule Service
           </Button>
