@@ -17,7 +17,7 @@ export function TabNavigation({ activeTab, setActiveTab }: TabNavigationProps) {
   ];
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-8">
+    <div className="flex items-center justify-between gap-4 mb-6">
       <div className="flex items-center gap-2 p-1 bg-secondary/50 rounded-xl w-fit border border-border">
         {tabs.map((tab) => (
           <button

@@ -11,7 +11,7 @@ const drivers = [
 
 const DriverProfiles = () => {
   return (
-    <div className="bg-card rounded-xl p-6 border flex-1 hover:shadow-lg transition-shadow">
+    <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-6 flex-1 shadow-xl">
       <h2 className="text-xl font-bold text-foreground mb-6">Driver Profiles</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left">
@@ -30,7 +30,7 @@ const DriverProfiles = () => {
           <tbody className="divide-y">
             {drivers.map((driver) => (
               <tr key={driver.id} className="text-sm hover:bg-white/5 transition-colors group">
-                <td className="py-4 text-[#00D1FF] font-medium">{driver.id}</td>
+                <td className="py-4 text-cyan-400 font-medium">{driver.id}</td>
                 <td className="py-4 text-foreground">{driver.name}</td>
                 <td className="py-4">
                   <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ const DriverProfiles = () => {
                 <td className="py-4 text-foreground">{driver.vehicle}</td>
                 <td className="py-4">
                   <div className="flex items-center gap-3">
-                    <button className="text-[#00D1FF] hover:underline cursor-pointer">View</button>
+                    <button className="text-cyan-400 hover:underline cursor-pointer">View</button>
                     <button className="text-muted-foreground hover:text-foreground cursor-pointer">Assign</button>
                   </div>
                 </td>

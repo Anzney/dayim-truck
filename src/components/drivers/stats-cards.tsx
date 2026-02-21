@@ -9,21 +9,19 @@ interface StatCardProps {
   iconBg: string
 }
 
-const StatCard = ({ title, value, trend, icon, iconBg }: StatCardProps) => (
-  <div className="bg-card p-6 rounded-xl border flex justify-between items-start hover:scale-[1.02] transition-transform cursor-pointer">
-    <div>
-      <p className="text-muted-foreground text-sm font-medium mb-2">{title}</p>
-      <div className="flex items-end gap-2">
-        <h3 className="text-3xl font-bold text-foreground">{value}</h3>
-        {trend && (
-          <div className="flex items-center text-green-400 text-xs mb-1">
-            <TrendingUp size={12} className="mr-1" />
-            <span>{trend}</span>
-          </div>
-        )}
-      </div>
+const StatCard = ({ title, value, trend, icon }: { title: string, value: string | number, trend?: string, icon: React.ReactNode }) => (
+  <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-5 flex justify-between items-start transition-all cursor-pointer group hover:scale-[1.02]">
+    <div className="space-y-1">
+      <p className="text-muted-foreground text-sm font-medium">{title}</p>
+      <h3 className="text-3xl font-bold dark:text-[#e2e2e2] tracking-tight">{value}</h3>
+      {trend && (
+        <div className="flex items-center text-emerald-400 text-xs font-semibold">
+          <TrendingUp size={12} className="mr-1" />
+          <span>{trend}</span>
+        </div>
+      )}
     </div>
-    <div className={`p-3 rounded-xl ${iconBg} bg-opacity-10 text-xl`}>
+    <div className="p-3 rounded-lg bg-gray-100 dark:bg-neutral-900 border text-muted-foreground group-hover:text-cyan-400 transition-colors">
       {icon}
     </div>
   </div>
@@ -31,31 +29,27 @@ const StatCard = ({ title, value, trend, icon, iconBg }: StatCardProps) => (
 
 const StatsCards = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <StatCard
         title="Total Drivers"
         value="6"
-        icon={<Users className="text-[#00D1FF]" />}
-        iconBg="bg-[#00D1FF]"
+        icon={<Users size={20} />}
       />
       <StatCard
         title="Avg Safety Score"
         value="89"
         trend="3 pts"
-        icon={<Star className="text-[#FBB63F]" />}
-        iconBg="bg-[#FBB63F]"
+        icon={<Star size={20} />}
       />
       <StatCard
         title="Total Violations"
         value="11"
-        icon={<AlertTriangle className="text-[#FF4D4D]" />}
-        iconBg="bg-[#FF4D4D]"
+        icon={<AlertTriangle size={20} />}
       />
       <StatCard
         title="Avg Hours/Driver"
         value="1633"
-        icon={<Clock className="text-[#00D1FF]" />}
-        iconBg="bg-[#00D1FF]"
+        icon={<Clock size={20} />}
       />
     </div>
   )

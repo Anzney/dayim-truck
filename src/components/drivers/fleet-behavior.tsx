@@ -14,19 +14,19 @@ const data = [
 
 const FleetBehavior = () => {
   return (
-    <div className="bg-card rounded-xl p-6 border h-[400px] w-full lg:w-[400px]">
+    <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-6 h-[400px] w-full lg:w-[400px] shadow-xl">
       <h2 className="text-xl font-bold text-foreground mb-6">Fleet Driving Behavior</h2>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-            <PolarGrid stroke="#ffffff20" />
-            <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+            <PolarGrid stroke="#ffffff10" />
+            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
             <Radar
               name="Behavior"
               dataKey="A"
-              stroke="#00D1FF"
-              fill="#00D1FF"
-              fillOpacity={0.4}
+              stroke="#0ea5e9"
+              fill="#0ea5e9"
+              fillOpacity={0.5}
             />
           </RadarChart>
         </ResponsiveContainer>

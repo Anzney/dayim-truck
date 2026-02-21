@@ -14,7 +14,7 @@ const data = [
 
 const HoursTracking = () => {
   return (
-    <div className="bg-card rounded-xl p-6 border mt-8">
+    <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-6 mt-8 shadow-xl">
       <h2 className="text-xl font-bold text-foreground mb-8">Hours Tracking</h2>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
@@ -24,23 +24,23 @@ const HoursTracking = () => {
               dataKey="name"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#94a3b8', fontSize: 12 }}
+              tick={{ fill: '#64748b', fontSize: 12 }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#94a3b8', fontSize: 12 }}
+              tick={{ fill: '#64748b', fontSize: 12 }}
               domain={[0, 2200]}
               ticks={[0, 550, 1100, 1650, 2200]}
             />
             <Tooltip
               cursor={{ fill: '#ffffff05' }}
-              contentStyle={{ backgroundColor: '#1e1e1f', border: 'none', borderRadius: '8px', color: '#fff' }}
+              contentStyle={{ backgroundColor: '#171717', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }}
             />
             <Bar
               dataKey="hours"
-              fill="#00D1FF"
-              radius={[4, 4, 0, 0]}
+              fill="#06b6d4"
+              radius={[6, 6, 0, 0]}
               barSize={120}
             />
           </BarChart>

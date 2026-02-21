@@ -12,7 +12,7 @@ export function ReportsSettingsDashboard() {
   const [activeTab, setActiveTab] = useState("reports");
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground p-8">
+    <div className="min-h-screen bg-transparent text-foreground pt-4 px-8 pb-8">
       <div className="max-w-7xl mx-auto">
         <Header />
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
