@@ -19,13 +19,13 @@ const FleetBehavior = () => {
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-            <PolarGrid stroke="#ffffff10" />
-            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
+            <PolarGrid stroke="hsl(var(--border))" opacity={0.2} />
+            <PolarAngleAxis dataKey="subject" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 500 }} />
             <Radar
               name="Behavior"
               dataKey="A"
-              stroke="#0ea5e9"
-              fill="#0ea5e9"
+              stroke="var(--primary)"
+              fill="var(--primary)"
               fillOpacity={0.5}
             />
           </RadarChart>

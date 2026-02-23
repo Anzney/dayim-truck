@@ -13,15 +13,15 @@ const StatCard = ({ title, value, trend, icon }: { title: string, value: string 
   <div className="rounded-2xl border dark:bg-gradient-to-br dark:from-neutral-700/30 dark:to-neutral-800/40 dark:backdrop-blur-2xl p-5 flex justify-between items-start transition-all cursor-pointer group hover:scale-[1.02]">
     <div className="space-y-1">
       <p className="text-muted-foreground text-sm font-medium">{title}</p>
-      <h3 className="text-3xl font-bold dark:text-[#e2e2e2] tracking-tight">{value}</h3>
+      <h3 className="text-3xl font-bold dark:text-foreground tracking-tight">{value}</h3>
       {trend && (
-        <div className="flex items-center text-emerald-400 text-xs font-semibold">
+        <div className="flex items-center text-primary text-xs font-semibold">
           <TrendingUp size={12} className="mr-1" />
           <span>{trend}</span>
         </div>
       )}
     </div>
-    <div className="p-3 rounded-lg bg-gray-100 dark:bg-neutral-900 border text-muted-foreground group-hover:text-cyan-400 transition-colors">
+    <div className="p-3 rounded-lg bg-gray-100 dark:bg-neutral-900 border text-muted-foreground group-hover:text-primary transition-colors">
       {icon}
     </div>
   </div>

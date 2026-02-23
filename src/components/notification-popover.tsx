@@ -23,8 +23,7 @@ const NotificationPopover = () => {
           <div className='p-1.5 border rounded-full relative'>
             <Bell className='size-4' />
             {unreadCount > 0 && (
-              <div className='absolute -top-[1px] -right-[1px] w-2 h-2 bg-red-500 rounded-full flex items-center justify-center'>
-              </div>
+              <div className='absolute -top-[1px] -right-[1px] w-2 h-2 bg-destructive rounded-full flex items-center justify-center' />
             )}
           </div>
           <p className='text-sm pr-2'>
@@ -37,7 +36,7 @@ const NotificationPopover = () => {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-2">
-              <TriangleAlert className="size-5 text-red-500" />
+              <TriangleAlert className="size-5 text-destructive" />
               <h3 className="font-semibold text-lg">AI Generated Alerts</h3>
             </div>
             <Button
@@ -63,8 +62,8 @@ const NotificationPopover = () => {
                   <div
                     key={alert.id}
                     className={`p-3 mb-2 rounded-lg border transition-colors ${alert.read
-                        ? 'border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50'
-                        : 'border-red-400 bg-red-50/50 dark:bg-red-900/20'
+                      ? 'border-border bg-muted/30'
+                      : 'border-destructive/40 bg-destructive/5'
                       }`}
                   >
                     <div className="flex items-start justify-between gap-2">

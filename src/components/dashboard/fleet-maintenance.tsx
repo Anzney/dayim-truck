@@ -10,10 +10,10 @@ const maintenanceData = {
   upcomingService: 4,
   returningSoon: 2,
   chartData: [
-    { name: 'Operational', value: 16, color: '#10B981' },
-    { name: 'In Maintenance', value: 2, color: '#F59E0B' },
-    { name: 'Upcoming Service', value: 4, color: '#EF4444' },
-    { name: 'Returning Soon', value: 2, color: '#3B82F6' }
+    { name: 'Operational', value: 16, color: 'var(--primary)' },
+    { name: 'In Maintenance', value: 2, color: 'var(--color-chart-4)' },
+    { name: 'Upcoming Service', value: 4, color: 'hsl(var(--destructive))' },
+    { name: 'Returning Soon', value: 2, color: 'var(--color-chart-2)' }
   ]
 }
 
@@ -38,17 +38,17 @@ const aiMaintenanceInsights = [
 
 const FleetMaintenance = () => {
   return (
-    <div className='border rounded-2xl p-3 h-[62vh] overflow-y-scroll dark:bg-gradient-to-br dark:from-neutral-700/30 dark:from-70% dark:to-blue-900/40 dark:backdrop-blur-2xl'>
+    <div className='border rounded-2xl p-3 h-[62vh] overflow-y-scroll dark:bg-gradient-to-br dark:from-neutral-700/30 dark:from-70% dark:to-primary/10 dark:backdrop-blur-2xl'>
       <div className='flex items-center justify-between pb-2 mb-3'>
         <h2 className='font-bold text-lg tracking-tight flex items-center gap-2 w-full'>
-          <Wrench className='size-5 text-blue-600' />
+          <Wrench className='size-5 text-primary' />
           Fleet Maintenance
         </h2>
         <HoverCard>
           <HoverCardTrigger asChild>
-            <div className="flex shrink-0 items-center gap-2 cursor-pointer p-1 rounded-xl w-max bg-gradient-to-r from-blue-200 to-blue-300">
-              <div className='bg-white rounded-full p-1'>
-                <Sparkles className='size-3 text-black' />
+            <div className="flex shrink-0 items-center gap-2 cursor-pointer p-1 rounded-xl w-max bg-gradient-to-r from-primary/30 to-primary/50">
+              <div className='bg-primary-foreground rounded-full p-1'>
+                <Sparkles className='size-3 text-primary' />
               </div>
             </div>
           </HoverCardTrigger>
@@ -86,7 +86,7 @@ const FleetMaintenance = () => {
                     ></div>
                     <p className='text-sm '>{item.name}</p>
                   </div>
-                  <p className='text-sm  font-bold dark:text-[#e2e2e2]'>{item.value} trucks</p>
+                  <p className='text-sm  font-bold dark:text-foreground'>{item.value} trucks</p>
                 </div>
               </div>
             ))}

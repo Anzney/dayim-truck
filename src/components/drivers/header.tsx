@@ -22,7 +22,7 @@ const DriverHeader = ({ onAddClick }: { onAddClick: () => void }) => {
           </Button>
           <Button
             onClick={onAddClick}
-            className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold flex items-center gap-2 h-10 px-4 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+            className="bg-primary hover:bg-primary/90 text-white font-semibold flex items-center gap-2 h-10 px-4 rounded-xl shadow-[0_0_20px_rgba(var(--primary),0.3)]"
           >
             <Plus className="size-4" />
             Add Driver

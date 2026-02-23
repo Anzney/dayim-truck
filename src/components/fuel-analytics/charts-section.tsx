@@ -50,8 +50,8 @@ const FuelChartsSection = () => {
               <LineChart data={consumptionData}>
                 <defs>
                   <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
@@ -72,16 +72,16 @@ const FuelChartsSection = () => {
                   type="monotone"
                   dataKey="used"
                   name="Total Fuel Used"
-                  stroke="#3b82f6"
+                  stroke="var(--primary)"
                   strokeWidth={3}
-                  dot={{ r: 4, strokeWidth: 2, fill: '#000' }}
+                  dot={{ r: 4, strokeWidth: 2, fill: 'hsl(var(--background))' }}
                   activeDot={{ r: 6, strokeWidth: 0 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="cost"
                   name="Cost Per KM"
-                  stroke="#f59e0b"
+                  stroke="var(--color-chart-2)"
                   strokeWidth={2}
                   dot={{ r: 3 }}
                 />
@@ -114,8 +114,8 @@ const FuelChartsSection = () => {
                   tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.5 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="budget" name="Budget" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={12} />
-                <Bar dataKey="actual" name="Actual" fill="#ef4444" radius={[4, 4, 0, 0]} barSize={12} />
+                <Bar dataKey="budget" name="Budget" fill="var(--primary)" radius={[4, 4, 0, 0]} barSize={12} />
+                <Bar dataKey="actual" name="Actual" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} barSize={12} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -194,7 +194,7 @@ const FuelChartsSection = () => {
             </div>
             <h4 className="font-bold mb-1">Anomaly Alerts</h4>
             <p className="text-xs opacity-60 mb-4">4 Unresolved fuel drops detected in last 24h</p>
-            <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white border-none shadow-lg shadow-red-500/20">Action Required</Button>
+            <Button size="sm" variant="destructive" className="shadow-lg shadow-destructive/20">Action Required</Button>
           </Card>
         </div>
       </div>

@@ -30,8 +30,8 @@ export function SettingsTab() {
         className="bg-card border border-border rounded-2xl p-8 shadow-sm"
       >
         <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-cyan-500/10 rounded-lg">
-            <Bell className="h-5 w-5 text-cyan-500" />
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <Bell className="h-5 w-5 text-primary" />
           </div>
           <h2 className="text-xl font-bold text-foreground uppercase tracking-wider">Notifications</h2>
         </div>
@@ -44,7 +44,7 @@ export function SettingsTab() {
               </span>
               <Switch
                 defaultChecked={notif.enabled}
-                className="data-[state=checked]:bg-cyan-500"
+                className="data-[state=checked]:bg-primary"
               />
             </div>
           ))}
@@ -59,8 +59,8 @@ export function SettingsTab() {
         className="bg-card border border-border rounded-2xl p-8 shadow-sm"
       >
         <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-cyan-500/10 rounded-lg">
-            <Link2 className="h-5 w-5 text-cyan-500" />
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <Link2 className="h-5 w-5 text-primary" />
           </div>
           <h2 className="text-xl font-bold text-foreground uppercase tracking-wider">API Integrations</h2>
         </div>
@@ -69,17 +69,17 @@ export function SettingsTab() {
           {integrations.map((item) => (
             <div
               key={item.name}
-              className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-transparent hover:border-cyan-500/30 hover:bg-muted/50 transition-all group"
+              className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-transparent hover:border-primary/30 hover:bg-muted/50 transition-all group"
             >
               <div className="flex items-center gap-3">
-                <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-cyan-400 transition-colors" />
+                <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="text-foreground font-medium">{item.name}</span>
               </div>
               <div className="flex items-center gap-2">
                 {item.status === "Connected" ? (
                   <>
-                    <span className="text-xs font-bold text-emerald-500">Connected</span>
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    <span className="text-xs font-bold text-primary">Connected</span>
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                   </>
                 ) : (
                   <>

@@ -33,21 +33,21 @@ const faultCodes: FaultCode[] = [
 export function ActiveFaultCodes() {
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-foreground mb-6">Active Fault Codes</h2>
-      <div className="space-y-4">
+      <h2 className="text-lg font-bold text-foreground mb-4">Active Fault Codes</h2>
+      <div className="space-y-3">
         {faultCodes.map((fault, index) => (
           <div
             key={index}
-            className="p-4 rounded-xl bg-neutral-100 dark:bg-neutral-900 border-l-4 border-red-500 group hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all duration-300 transform hover:-translate-x-1 cursor-pointer shadow-sm"
+            className="p-3 rounded-xl bg-secondary/50 border-l-4 border-destructive group hover:bg-secondary transition-all duration-300 transform hover:-translate-x-1 cursor-pointer shadow-sm"
           >
             <div className="flex justify-between items-start mb-1">
-              <span className="text-red-500 font-bold text-base">{fault.code}</span>
+              <span className="text-destructive font-bold text-base">{fault.code}</span>
               <div className="flex items-center gap-4 text-muted-foreground text-[10px] sm:text-xs">
                 <span>{fault.vehicle}</span>
                 <span>{fault.date}</span>
               </div>
             </div>
-            <p className="text-foreground text-sm font-medium group-hover:text-red-500 transition-colors line-clamp-1">
+            <p className="text-foreground text-sm font-medium group-hover:text-destructive transition-colors line-clamp-1">
               {fault.description}
             </p>
           </div>

@@ -36,15 +36,15 @@ const LoadUtilizationChart = () => {
       const overloadCount = payload.find((p: any) => p.dataKey === 'overload')?.value || 0;
 
       return (
-        <div className="bg-white p-3 border rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-900">{label}</p>
+        <div className="bg-card p-3 border rounded-lg shadow-lg">
+          <p className="font-semibold text-foreground">{label}</p>
           {underloadCount > 0 && (
-            <p className="text-sm text-blue-600">
+            <p className="text-sm text-primary">
               Underload Vehicles: <span className="font-semibold">{underloadCount}</span>
             </p>
           )}
           {overloadCount > 0 && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-destructive">
               Overload Vehicles: <span className="font-semibold">{overloadCount}</span>
             </p>
           )}
@@ -58,7 +58,7 @@ const LoadUtilizationChart = () => {
     <div className="w-full h-full p-4 rounded-2xl flex flex-col">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
         <h3 className="text-lg font-semibold">Load Utilization</h3>
-        <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
+        <div className="text-sm text-primary hover:text-primary/80 cursor-pointer">
           View More
         </div>
       </div>
@@ -78,14 +78,14 @@ const LoadUtilizationChart = () => {
               dataKey="day"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: '#6b7280' }}
+              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
             />
             <Tooltip content={<CustomTooltip />} />
 
             {/* Underload bars (negative values, blue color) */}
             <Bar
               dataKey="underload"
-              fill="#3b82f6"
+              fill="var(--primary)"
               radius={[4, 4, 0, 0]}
               name="Underload"
             >
@@ -93,7 +93,7 @@ const LoadUtilizationChart = () => {
                 dataKey="underload"
                 position="top"
                 formatter={(value: any) => Math.abs(Number(value))}
-                style={{ fontSize: 12, fill: '#6b7280' }}
+                style={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
               />
             </Bar>
 
@@ -102,14 +102,14 @@ const LoadUtilizationChart = () => {
             {/* Overload bars (positive values, red color) */}
             <Bar
               dataKey="overload"
-              fill="#ef4444"
+              fill="hsl(var(--destructive))"
               radius={[4, 4, 0, 0]}
               name="Overload"
             >
               <LabelList
                 dataKey="overload"
                 position="top"
-                style={{ fontSize: 12, fill: '#6b7280' }}
+                style={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
               />
             </Bar>
           </BarChart>

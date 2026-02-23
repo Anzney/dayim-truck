@@ -52,7 +52,7 @@ const FuelTablesSection = () => {
       <Card className="bg-card/40 backdrop-blur-sm border-muted">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <AlertTriangle className="size-4 text-red-500" />
+            <AlertTriangle className="size-4 text-destructive" />
             Fuel Anomaly Alerts
           </CardTitle>
           <Button variant="outline" size="sm" className="h-8 text-[11px] gap-1.5 border-muted">
@@ -77,7 +77,7 @@ const FuelTablesSection = () => {
                     <td className="py-4 pr-4 opacity-70 text-[12px]">{alert.date}</td>
                     <td className="py-4 pr-4 opacity-90 text-[12px] max-w-[200px] truncate">{alert.details}</td>
                     <td className="py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 text-red-500 font-bold text-[11px]">
+                      <div className="flex items-center justify-end gap-2 text-destructive font-bold text-[11px]">
                         <AlertTriangle className="size-3" />
                         {alert.status.toUpperCase()}
                       </div>
@@ -122,18 +122,18 @@ const FuelTablesSection = () => {
                     <td className="py-4 pr-4 font-bold text-foreground">{item.id}</td>
                     <td className="py-4 pr-4 font-mono font-medium">{item.fuel}</td>
                     <td className="py-4 pr-4 opacity-80">{item.mileage}</td>
-                    <td className="py-4 pr-4 font-mono text-emerald-500 font-bold">{item.cost}</td>
+                    <td className="py-4 pr-4 font-mono text-primary font-bold">{item.cost}</td>
                     <td className="py-4 pr-4 text-[12px]">
                       <div className="flex items-center gap-3">
                         <span className="opacity-70 w-12">{item.idle}</span>
                         <MiniSparkline
                           data={item.trend}
-                          color={item.mileage.includes('18') ? '#10b881' : item.mileage.includes('14') ? '#ef4444' : '#f59e0b'}
+                          color={item.mileage.includes('18') ? 'var(--primary)' : item.mileage.includes('14') ? 'hsl(var(--destructive))' : 'var(--color-chart-2)'}
                         />
                       </div>
                     </td>
                     <td className="py-4 text-right">
-                      <div className={`flex items-center justify-end font-bold rounded-full size-6 ml-auto ${item.alerts > 0 ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                      <div className={`flex items-center justify-end font-bold rounded-full size-6 ml-auto ${item.alerts > 0 ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
                         {item.alerts}
                       </div>
                     </td>

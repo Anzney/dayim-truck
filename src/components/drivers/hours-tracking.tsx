@@ -19,27 +19,32 @@ const HoursTracking = () => {
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff10" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.1} />
             <XAxis
               dataKey="name"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#64748b', fontSize: 12 }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#64748b', fontSize: 12 }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
               domain={[0, 2200]}
               ticks={[0, 550, 1100, 1650, 2200]}
             />
             <Tooltip
-              cursor={{ fill: '#ffffff05' }}
-              contentStyle={{ backgroundColor: '#171717', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }}
+              cursor={{ fill: 'hsl(var(--secondary))', opacity: 0.1 }}
+              contentStyle={{
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '12px',
+                color: 'hsl(var(--foreground))'
+              }}
             />
             <Bar
               dataKey="hours"
-              fill="#06b6d4"
+              fill="var(--primary)"
               radius={[6, 6, 0, 0]}
               barSize={120}
             />

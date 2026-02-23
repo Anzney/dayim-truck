@@ -34,9 +34,9 @@ const initialUsers = [
 ];
 
 const roleStyles = {
-  Admin: "bg-red-500/10 text-red-500 border-red-500/20",
-  Dispatcher: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  Manager: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+  Admin: "bg-destructive/10 text-destructive border-destructive/20",
+  Dispatcher: "bg-primary/10 text-primary border-primary/20",
+  Manager: "bg-amber-500/10 text-amber-500 border-amber-500/20",
   Viewer: "bg-slate-500/10 text-slate-400 border-slate-500/20",
 };
 
@@ -67,7 +67,7 @@ export function UsersRolesTab() {
           <h2 className="text-xl font-bold text-foreground">User Management</h2>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] group"
+            className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--primary),0.3)] group"
           >
             <Plus className="h-4 w-4 group-hover:rotate-90 transition-transform" />
             Add User
@@ -93,7 +93,7 @@ export function UsersRolesTab() {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <td className="px-6 py-4">
-                    <span className="text-foreground font-medium group-hover:text-cyan-400 transition-colors">{user.name}</span>
+                    <span className="text-foreground font-medium group-hover:text-primary transition-colors">{user.name}</span>
                   </td>
                   <td className="px-6 py-4 text-muted-foreground">
                     {user.email}
@@ -111,12 +111,12 @@ export function UsersRolesTab() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-3 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-                      <button className="p-2 text-cyan-500 hover:bg-cyan-500/10 rounded-lg transition-colors">
+                      <button className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
                         <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteUser(user.email)}
-                        className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                        className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

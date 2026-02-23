@@ -30,14 +30,14 @@ const DriverProfiles = () => {
           <tbody className="divide-y">
             {drivers.map((driver) => (
               <tr key={driver.id} className="text-sm hover:bg-white/5 transition-colors group">
-                <td className="py-4 text-cyan-400 font-medium">{driver.id}</td>
+                <td className="py-4 text-primary font-medium">{driver.id}</td>
                 <td className="py-4 text-foreground">{driver.name}</td>
                 <td className="py-4">
                   <div className="flex items-center gap-2">
                     <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${driver.score >= 90 ? 'bg-green-500' :
-                          driver.score >= 80 ? 'bg-yellow-500' : 'bg-red-500'
+                        className={`h-full rounded-full ${driver.score >= 90 ? 'bg-primary' :
+                          driver.score >= 80 ? 'bg-amber-500' : 'bg-destructive'
                           }`}
                         style={{ width: `${driver.score}%` }}
                       ></div>
@@ -49,15 +49,15 @@ const DriverProfiles = () => {
                 <td className="py-4 text-foreground">{driver.hours}</td>
                 <td className="py-4">
                   {driver.violations === 0 ? (
-                    <span className="text-green-400">Clean</span>
+                    <span className="text-primary">Clean</span>
                   ) : (
-                    <span className="text-red-400">⚠ {driver.violations}</span>
+                    <span className="text-destructive">⚠ {driver.violations}</span>
                   )}
                 </td>
                 <td className="py-4 text-foreground">{driver.vehicle}</td>
                 <td className="py-4">
                   <div className="flex items-center gap-3">
-                    <button className="text-cyan-400 hover:underline cursor-pointer">View</button>
+                    <button className="text-primary hover:underline cursor-pointer">View</button>
                     <button className="text-muted-foreground hover:text-foreground cursor-pointer">Assign</button>
                   </div>
                 </td>

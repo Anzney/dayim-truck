@@ -12,17 +12,17 @@ interface KpiCardProps extends KpiData {
 
 const KpiCard = ({ title, value, subtext, trend, icon: Icon, color, gaugeValue }: KpiCardProps) => {
   const colorMap: Record<string, string> = {
-    blue: "border-blue-500/30 bg-blue-500/5 text-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.1)]",
-    red: "border-red-500/30 bg-red-500/5 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.1)]",
-    green: "border-emerald-500/30 bg-emerald-500/5 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.1)]",
+    blue: "border-primary/30 bg-primary/5 text-primary shadow-[0_0_15px_rgba(var(--primary),0.1)]",
+    red: "border-destructive/30 bg-destructive/5 text-destructive shadow-[0_0_15px_rgba(var(--destructive),0.1)]",
+    green: "border-primary/30 bg-primary/5 text-primary shadow-[0_0_15px_rgba(var(--primary),0.1)]",
     yellow: "border-amber-500/30 bg-amber-500/5 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)]",
     gold: "border-orange-400/30 bg-orange-400/5 text-orange-400 shadow-[0_0_15px_rgba(251,146,60,0.1)]"
   }
 
   const iconColorMap: Record<string, string> = {
-    blue: "bg-blue-500/20",
-    red: "bg-red-500/20",
-    green: "bg-emerald-500/20",
+    blue: "bg-primary/20",
+    red: "bg-destructive/20",
+    green: "bg-primary/20",
     yellow: "bg-amber-500/20",
     gold: "bg-orange-400/20"
   }
@@ -42,7 +42,7 @@ const KpiCard = ({ title, value, subtext, trend, icon: Icon, color, gaugeValue }
 
         <div className="flex items-center gap-2">
           {trend && (
-            <span className={`flex items-center text-xs font-bold ${trend.type === 'up' ? 'text-emerald-500' : 'text-red-500'}`}>
+            <span className={`flex items-center text-xs font-bold ${trend.type === 'up' ? 'text-primary' : 'text-destructive'}`}>
               {trend.type === 'up' ? <ArrowUpRight className="size-3 mr-0.5" /> : <ArrowDownRight className="size-3 mr-0.5" />}
               {trend.value}
             </span>
