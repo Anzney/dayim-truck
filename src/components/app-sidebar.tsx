@@ -1,4 +1,4 @@
-import { LayoutDashboard, MapPinned, BotMessageSquare, Headset, Fuel, Settings, Wrench, Users } from 'lucide-react'
+import { LayoutDashboard, MapPinned, BotMessageSquare, Headset, Fuel, Settings, Wrench, Users, Truck } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
@@ -32,23 +32,28 @@ const routes: Route[] = [
     href: "/dayimGPT"
   },
   {
-    id: 5,
-    icon: <Wrench className='size-5' />,
+    id: 9,
+    icon: <Wrench className='size-5 text-[#8b5cf6]' />,
     href: "/maintenance"
   },
   {
+    id: 5,
+    icon: <Truck className='size-5 text-[#f59e0b]' />,
+    href: "/fleet-operations"
+  },
+  {
     id: 8,
-    icon: <Users className='size-5' />,
+    icon: <Users className='size-5 text-[#10b981]' />,
     href: "/drivers"
   },
   {
     id: 6,
-    icon: <Headset className='size-5' />,
+    icon: <Headset className='size-5 text-[#3b82f6]' />,
     href: "/customer-support"
   },
   {
     id: 7,
-    icon: <Settings className='size-5' />,
+    icon: <Settings className='size-5 text-gray-400' />,
     href: "/reports-&-settings"
   }
 ]
