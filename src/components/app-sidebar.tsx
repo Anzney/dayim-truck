@@ -23,8 +23,8 @@ const routes: Route[] = [
   },
   {
     id: 3,
-    icon: <Fuel className='size-5' />,
-    href: "/fuel-analytics"
+    icon: <Fuel className='size-5 text-[#22d3ee]' />,
+    href: "/fuel-&-costs"
   },
   {
     id: 4,
