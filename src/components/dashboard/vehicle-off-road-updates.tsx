@@ -56,26 +56,26 @@ const offRoadIncidents = [
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'critical':
-      return 'border-l-red-500 hover:bg-red-50/50 hover:dark:bg-red-900/20'
+      return 'border-l-destructive hover:bg-destructive/5'
     case 'progress':
-      return 'border-l-yellow-500 hover:bg-yellow-50/50 hover:dark:bg-yellow-900/20'
+      return 'border-l-amber-500 hover:bg-amber-500/5'
     case 'near-completion':
-      return 'border-l-green-500 hover:bg-green-50/50 hover:dark:bg-green-900/20'
+      return 'border-l-primary hover:bg-primary/5'
     default:
-      return 'border-l-gray-500 hover:bg-gray-50/50 hover:dark:bg-gray-900/20'
+      return 'border-l-muted hover:bg-muted/5'
   }
 }
 
 const getTagColor = (tag: string) => {
   switch (tag) {
     case 'Breakdown':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+      return 'bg-destructive/10 text-destructive'
     case 'Accident':
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
+      return 'bg-amber-500/10 text-amber-600'
     case 'Maintenance':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+      return 'bg-primary/10 text-primary'
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
+      return 'bg-muted text-muted-foreground'
   }
 }
 
@@ -86,7 +86,7 @@ const VehicleOffRoadUpdates = () => {
       <div className='flex items-center justify-between pb-3 mb-1 border-b flex-shrink-0'>
         <div>
           <h2 className='font-bold text-lg tracking-tight flex items-center gap-2'>
-            <Truck className="size-5 text-blue-600" />
+            <Truck className="size-5 text-primary" />
             Vehicle Off-Road Updates
           </h2>
         </div>
@@ -112,7 +112,7 @@ const VehicleOffRoadUpdates = () => {
                     </span>
                   </div>
 
-                  <p className='text-sm text-[#444] dark:text-[#e0e0e0] mb-2 tracking-tight'>
+                  <p className='text-sm text-foreground/80 mb-2 tracking-tight'>
                     {incident.progress}
                   </p>
 
@@ -122,10 +122,10 @@ const VehicleOffRoadUpdates = () => {
                       <span>Progress</span>
                       <span>{incident.progressPercentage}%</span>
                     </div>
-                    <div className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5'>
+                    <div className='w-full bg-input rounded-full h-1.5'>
                       <div
-                        className={`h-1.5 rounded-full transition-all duration-300 ${incident.status === 'critical' ? 'bg-red-500' :
-                            incident.status === 'progress' ? 'bg-yellow-500' : 'bg-green-500'
+                        className={`h-1.5 rounded-full transition-all duration-300 ${incident.status === 'critical' ? 'bg-destructive' :
+                          incident.status === 'progress' ? 'bg-amber-500' : 'bg-primary'
                           }`}
                         style={{ width: `${incident.progressPercentage}%` }}
                       ></div>

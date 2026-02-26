@@ -48,11 +48,11 @@ function VehiclesContractRiskChart({
     let color: string;
 
     if (percentage > 100) {
-      color = '#ef4444'; // Red for exceeded
+      color = 'hsl(var(--destructive))'; // Red for exceeded
     } else if (percentage >= 80) {
-      color = '#F59E0B'; // Yellow/Orange for near limit
+      color = 'var(--color-chart-4)'; // Orange for near limit
     } else {
-      color = '#10b981'; // Green for normal
+      color = 'var(--primary)'; // Global primary for normal
     }
 
     return {

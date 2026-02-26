@@ -62,7 +62,7 @@ const ActiveIdleTimeChart = () => {
     <div className="w-full h-full p-4 rounded-2xl flex flex-col">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
         <h3 className="text-lg font-semibold">Active vs Idle Time</h3>
-        <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
+        <div className="text-sm text-primary hover:text-primary/80 cursor-pointer">
           View More
         </div>
       </div>
@@ -79,30 +79,30 @@ const ActiveIdleTimeChart = () => {
           >
             <defs>
               <linearGradient id="activeGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="idleGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#f1f5f9"
+              stroke="hsl(var(--border))"
               opacity={0.1}
             />
             <XAxis
               dataKey="day"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
               tickMargin={8}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
               tickMargin={8}
             />
             <Tooltip content={<CustomTooltip />} />
@@ -111,7 +111,7 @@ const ActiveIdleTimeChart = () => {
               type="monotone"
               dataKey="active"
               stackId="1"
-              stroke="#10b981"
+              stroke="var(--primary)"
               strokeWidth={2}
               fill="url(#activeGradient)"
               name="Active Hours"
@@ -120,7 +120,7 @@ const ActiveIdleTimeChart = () => {
               type="monotone"
               dataKey="idle"
               stackId="1"
-              stroke="#f59e0b"
+              stroke="hsl(var(--muted-foreground))"
               strokeWidth={2}
               fill="url(#idleGradient)"
               name="Idle Hours"

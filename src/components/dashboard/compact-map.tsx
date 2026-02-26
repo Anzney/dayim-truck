@@ -137,10 +137,10 @@ const CompactMap = () => {
 
   const getStatusColor = (ignition: string, speed: string, trackDateTime: string) => {
     const status = getVehicleStatus(ignition, speed, trackDateTime)
-    if (status === "Offline") return "bg-gray-500"
-    if (status === "Idle") return "bg-yellow-500"
-    if (status === "Stopped") return "bg-red-500"
-    return "bg-green-500"
+    if (status === "Offline") return "bg-muted-foreground"
+    if (status === "Idle") return "bg-amber-500"
+    if (status === "Stopped") return "bg-destructive"
+    return "bg-primary"
   }
 
   return (
@@ -149,7 +149,7 @@ const CompactMap = () => {
       <div className='p-4 border-gray-200 dark:border-gray-700'>
         <div className='flex items-center justify-between'>
           <h3 className='font-semibold text-lg'>Live Tracking</h3>
-          <Link className='underline text-sm font-semibold tracking-tight' href="/live-tracking">See All</Link>
+          <Link className='underline text-sm font-semibold tracking-tight text-primary hover:text-primary/80' href="/live-tracking">See All</Link>
         </div>
       </div>
 
@@ -158,8 +158,8 @@ const CompactMap = () => {
         {loading && vehicles.length === 0 ? (
           <div className="flex items-center justify-center h-[40vh] max-h-[40vh]">
             <div className="flex flex-col items-center">
-              <Truck className='animate-pulse w-8 h-8 text-gray-400' />
-              <p className="text-sm text-gray-500 mt-2">Loading vehicles...</p>
+              <Truck className='animate-pulse w-8 h-8 text-primary/50' />
+              <p className="text-sm text-muted-foreground mt-2">Loading vehicles...</p>
             </div>
           </div>
         ) : (
@@ -200,20 +200,20 @@ const CompactMap = () => {
           </Map>
         )}
 
-        <div className='flex items-center gap-4 justify-between absolute top-4 left-8 px-4 rounded-xl h-10 z-20 flex-shrink-0 bg-white '>
+        <div className='flex items-center gap-4 justify-between absolute top-4 left-8 px-4 border rounded-xl h-10 z-20 flex-shrink-0 bg-background/80 backdrop-blur-sm '>
           <div className='rounded-lg flex gap-4'>
             <div className='flex items-center gap-2'>
-              <div className='h-2 w-2 rounded-full bg-[#10B981]'></div>
+              <div className='h-2 w-2 rounded-full bg-primary'></div>
               <p className='  text-xs tracking-tight'>Running</p>
             </div>
 
             <div className='flex items-center gap-2'>
-              <div className='h-2 w-2 rounded-full bg-amber-400'></div>
+              <div className='h-2 w-2 rounded-full bg-chart-4'></div>
               <p className='  text-xs tracking-tight'>Idle</p>
             </div>
 
             <div className='flex items-center gap-2'>
-              <div className='h-2 w-2 rounded-full bg-gray-400'></div>
+              <div className='h-2 w-2 rounded-full bg-destructive'></div>
               <p className='  text-xs tracking-tight'>Stopped</p>
             </div>
           </div>

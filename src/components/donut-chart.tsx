@@ -16,7 +16,7 @@ interface DonutChartProps {
 
 const DonutChart = ({
   percentage = 0,
-  color = '#fbb63f',
+  color = 'var(--primary)',
   trackColor = '#E5E7EB',
   width = 180,
   height = 100,
@@ -28,8 +28,8 @@ const DonutChart = ({
   const { theme } = useTheme()
   const safePercentage = Math.max(0, Math.min(100, Number(percentage) || 0))
 
-  // Use neutral-700 for dark mode, otherwise use the provided trackColor
-  const effectiveTrackColor = theme === 'dark' || theme === 'system' ? '#29292a' : trackColor
+  // Use theme colors for the track
+  const effectiveTrackColor = "hsl(var(--muted))"
   const data = [
     { name: 'filled', value: safePercentage },
     { name: 'remaining', value: 100 - safePercentage }

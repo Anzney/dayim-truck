@@ -17,9 +17,9 @@ const maintenanceData = {
   mediumRisk: 4,
   highRisk: 2,
   chartData: [
-    { name: 'Good Condition', value: 14, color: '#10B981' },
-    { name: 'Medium Risk', value: 4, color: '#F59E0B' },
-    { name: 'High Risk', value: 2, color: '#EF4444' },
+    { name: 'Good Condition', value: 14, color: 'var(--primary)' },
+    { name: 'Medium Risk', value: 4, color: 'var(--color-chart-4)' },
+    { name: 'High Risk', value: 2, color: 'hsl(var(--destructive))' },
   ]
 }
 
@@ -36,42 +36,36 @@ const KpiHeaderCards = () => {
               </div>
               <div>
                 <p className='text-muted-foreground text-sm'>Total Fleets</p>
-                <p className='tabular-nums text-lg font-bold dark:text-[#e2e2e2]'>24</p>
+                <p className='tabular-nums text-lg font-bold dark:text-foreground'>24</p>
               </div>
             </div>
             <Button className="p-3" variant="outline" size="default">See All</Button>
           </div>
 
           <div className='w-full flex items-center mt-4 gap-1'>
-            <div className='h-3 w-[70%] bg-[#10B981] rounded-sm  flex items-center justify-center text-white font-bold text-shadow'>
-
-            </div>
-            <div className='h-3 w-[15%] bg-amber-400 rounded-sm flex items-center justify-center text-white font-bold text-shadow'>
-
-            </div>
-            <div className="h-3 w-[10%] bg-red-400 rounded-sm flex items-center justify-center text-white font-bold text-shadow">
-
-            </div>
+            <div className='h-3 w-[70%] bg-primary rounded-sm  flex items-center justify-center text-white font-bold text-shadow' />
+            <div className='h-3 w-[15%] bg-amber-500 rounded-sm flex items-center justify-center text-white font-bold text-shadow' />
+            <div className="h-3 w-[10%] bg-destructive rounded-sm flex items-center justify-center text-white font-bold text-shadow" />
           </div>
         </div>
         <div className='p-3 border-t flex items-center justify-center'>
           <div className='rounded-lg flex flex-wrap gap-4'>
             <div className='flex items-center gap-1'>
-              <div className='h-2 w-2 rounded-full bg-[#10B981]'></div>
+              <div className='h-2 w-2 rounded-full bg-primary'></div>
               <p className='  text-xs tracking-tight'>In use</p>
-              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-[#e2e2e2]'>18</p>
+              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-foreground'>18</p>
             </div>
 
             <div className='flex items-center gap-1'>
-              <div className='h-2 w-2 rounded-full bg-amber-400'></div>
+              <div className='h-2 w-2 rounded-full bg-amber-500'></div>
               <p className='  text-xs tracking-tight'>Upcoming Service</p>
-              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-[#e2e2e2]'>2</p>
+              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-foreground'>2</p>
             </div>
 
             <div className='flex items-center gap-1'>
-              <div className='h-2 w-2 rounded-full bg-red-400'></div>
+              <div className='h-2 w-2 rounded-full bg-destructive'></div>
               <p className='  text-xs tracking-tight'>Vehicle Off Road</p>
-              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-[#e2e2e2]'>4</p>
+              <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-foreground'>4</p>
             </div>
           </div>
         </div>
@@ -154,19 +148,19 @@ const KpiHeaderCards = () => {
                 <div className='flex items-center gap-2'>
                   <div className='h-2 w-2 rounded-full bg-[#10B981]'></div>
                   <p className='  text-xs tracking-tight'>Good Condition</p>
-                  <p className='  text-xs font-bold ml-4 flex items-center gap-1 dark:text-[#e2e2e2]'>14</p>
+                  <p className='  text-xs font-bold ml-4 flex items-center gap-1 dark:text-foreground'>14</p>
                 </div>
 
                 <div className='flex items-center gap-2'>
                   <div className='h-2 w-2 rounded-full bg-amber-400'></div>
                   <p className='  text-xs tracking-tight'>Medium Spoilage Risk</p>
-                  <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-[#e2e2e2]'>4</p>
+                  <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-foreground'>4</p>
                 </div>
 
                 <div className='flex items-center gap-2'>
                   <div className='h-2 w-2 rounded-full bg-red-400'></div>
                   <p className='  text-xs tracking-tight'>High Spoilage Risk</p>
-                  <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-[#e2e2e2]'>2</p>
+                  <p className='  text-xs font-bold ml-auto flex items-center gap-1 dark:text-foreground'>2</p>
                 </div>
               </div>
             </div>
