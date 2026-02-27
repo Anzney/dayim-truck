@@ -37,7 +37,7 @@ export const routes: Route[] = [
     id: 4,
     icon: <BotMessageSquare className="size-5" />,
     href: "/dayimGPT",
-    title: "Dayim GPT"
+    title: "Fleet-Track GPT"
   },
   {
     id: 9,
