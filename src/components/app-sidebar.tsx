@@ -88,7 +88,7 @@ const AppSidebar = () => {
   return (
     <Sidebar collapsible="icon">
       <ShadcnSidebarHeader className="p-4 flex h-16 items-center flex-row space-x-2">
-        <Image src="/dayim-logo.jpeg" height={30} width={30} alt="Dayim Logo" className="rounded-sm" />
+        <Image src="/icon.svg" height={30} width={30} alt="Dayim Logo" className="rounded-sm" />
         <span className="font-bold text-lg truncate group-data-[collapsible=icon]:hidden">Fleet Track</span>
       </ShadcnSidebarHeader>
       <SidebarContent>

@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dayim Trucking",
-  description: "Advanced Fleet Management Dashboard",
+  title: "Fleet Management System",
+  description: "Fleet Management System",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
