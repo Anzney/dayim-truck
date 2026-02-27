@@ -1,20 +1,6 @@
 "use client";
 
-interface VehicleHealth {
-  vehicle: string;
-  engine: number;
-  brakes: number;
-  tires: number;
-  transmission: number;
-}
-
-const healthData: VehicleHealth[] = [
-  { vehicle: "V-001", engine: 72, brakes: 73, tires: 91, transmission: 86 },
-  { vehicle: "V-002", engine: 78, brakes: 72, tires: 76, transmission: 96 },
-  { vehicle: "V-003", engine: 83, brakes: 98, tires: 85, transmission: 84 },
-  { vehicle: "V-004", engine: 72, brakes: 79, tires: 69, transmission: 82 },
-  { vehicle: "V-005", engine: 89, brakes: 77, tires: 65, transmission: 84 },
-];
+import { healthData } from "@/data/maintenance";
 
 function HealthBar({ value }: { value: number }) {
   const getBarColor = (val: number) => {

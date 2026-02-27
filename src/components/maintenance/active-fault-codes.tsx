@@ -2,33 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 
-interface FaultCode {
-  code: string;
-  description: string;
-  vehicle: string;
-  date: string;
-}
-
-const faultCodes: FaultCode[] = [
-  {
-    code: "P0300",
-    description: "Random/Multiple Cylinder Misfire",
-    vehicle: "V-008",
-    date: "2026-02-17",
-  },
-  {
-    code: "P0171",
-    description: "System Too Lean (Bank 1)",
-    vehicle: "V-003",
-    date: "2026-02-16",
-  },
-  {
-    code: "P0420",
-    description: "Catalyst System Efficiency Below Threshold",
-    vehicle: "V-005",
-    date: "2026-02-14",
-  },
-];
+import { faultCodes } from "@/data/maintenance";
 
 export function ActiveFaultCodes() {
   return (
