@@ -18,11 +18,11 @@ export const anomalyAlerts: AnomalyAlert[] = [
 ];
 
 export const vehiclePerformance: VehiclePerformance[] = [
-  { id: 'TRK-103', fuel: '350 L', mileage: '18.6 km/l', cost: '₹4.79/km', idle: '9.2 hrs', alerts: 1, trend: [40, 60, 45, 80, 55, 90] },
-  { id: 'VIK-238', fuel: '195 L', mileage: '17.3 km/l', cost: '₹4.87/km', idle: '6.0 hrs', alerts: 1, trend: [50, 40, 70, 45, 60, 50] },
-  { id: 'TRK-108', fuel: '165 L', mileage: '16.0 km/l', cost: '₹4.90/km', idle: '1.4 hrs', alerts: 1, trend: [30, 40, 35, 50, 45, 60] },
-  { id: 'TUV-109', fuel: '170 L', mileage: '18.5 km/l', cost: '₹4.99/km', idle: '5.2 hrs', alerts: 0, trend: [60, 55, 65, 70, 68, 75] },
-  { id: 'VAN-469', fuel: '150 L', mileage: '14.9 km/l', cost: '₹4.70/km', idle: '6.1 hrs', alerts: 1, trend: [20, 30, 25, 40, 35, 45] },
+  { id: 'TRK-103', fuel: '350 L', mileage: '18.6 km/l', cost: 'SAR 4.79/km', idle: '9.2 hrs', alerts: 1, trend: [40, 60, 45, 80, 55, 90] },
+  { id: 'VIK-238', fuel: '195 L', mileage: '17.3 km/l', cost: 'SAR 4.87/km', idle: '6.0 hrs', alerts: 1, trend: [50, 40, 70, 45, 60, 50] },
+  { id: 'TRK-108', fuel: '165 L', mileage: '16.0 km/l', cost: 'SAR 4.90/km', idle: '1.4 hrs', alerts: 1, trend: [30, 40, 35, 50, 45, 60] },
+  { id: 'TUV-109', fuel: '170 L', mileage: '18.5 km/l', cost: 'SAR 4.99/km', idle: '5.2 hrs', alerts: 0, trend: [60, 55, 65, 70, 68, 75] },
+  { id: 'VAN-469', fuel: '150 L', mileage: '14.9 km/l', cost: 'SAR 4.70/km', idle: '6.1 hrs', alerts: 1, trend: [20, 30, 25, 40, 35, 45] },
 ];
 
 export const consumptionData: ConsumptionData[] = [
@@ -67,7 +67,7 @@ export const fuelKpis: KpiData[] = [
   },
   {
     title: "Total Fuel Cost",
-    value: "₹74,500",
+    value: "SAR 74,500",
     subtext: "Budget vs Actual",
     trend: { value: "6.4%", type: "up" },
     color: "red",
@@ -81,7 +81,7 @@ export const fuelKpis: KpiData[] = [
   },
   {
     title: "Cost Per KM",
-    value: "₹4.62",
+    value: "SAR 4.62",
     subtext: "Rate per KM",
     color: "yellow",
     gaugeValue: 45,

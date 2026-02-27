@@ -9,7 +9,7 @@ export const aiInsights: AiInsight[] = [
   },
   {
     id: 2,
-    title: "Switching to Truck #12 for Route B reduces delivery cost by $3/km."
+    title: "Switching to Truck #12 for Route B reduces delivery cost by SAR 3/km."
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ Key Insights:
 
 ⛽ Today's Fuel Consumption: 847 liters
 📊 Average Efficiency: 6.2 km/L across fleet
-💰 Daily Fuel Cost: $1,235
+💰 Daily Fuel Cost: SAR 1,235
 
 Top Performers:
 • Truck #12: 8.1 km/L (best efficiency)
@@ -62,7 +62,7 @@ Needs Attention:
 • Truck #3: 4.2 km/L (25% below average)
 • Truck #9: 4.8 km/L (poor performance on Route C)
 
-Cost Savings Opportunity: Optimizing underperforming vehicles could save $180/day`,
+Cost Savings Opportunity: Optimizing underperforming vehicles could save SAR 180/day`,
     followUps: ['Show route optimization suggestions', 'Schedule maintenance for poor performers', 'Compare with last month']
   },
   {
@@ -82,7 +82,7 @@ This Week's Schedule:
 • Wednesday: Truck #8 - Tire rotation
 • Friday: Truck #4 - Engine diagnostic
 
-Maintenance Costs: $2,340 planned for this month`,
+Maintenance Costs: SAR 2,340 planned for this month`,
     followUps: ['Schedule overdue maintenance', 'View maintenance history', 'Set preventive maintenance alerts']
   },
   {
@@ -103,7 +103,7 @@ AI Recommendations:
 • Combine deliveries for Trucks #9 and #11 (reduce 1 vehicle)
 • Avoid downtown core 2-4 PM (peak traffic)
 
-Potential Savings: 2.5 hours daily, $450/week in fuel`,
+Potential Savings: 2.5 hours daily, SAR 450/week in fuel`,
     followUps: ['Apply suggested route changes', 'View real-time traffic updates', 'Historical route performance']
   },
   {
@@ -132,23 +132,23 @@ Training Opportunities: 2 drivers could benefit from eco-driving course`,
     keywords: ['costs', 'expenses', 'budget', 'financial'],
     response: `Fleet financial overview and cost analysis:
 
-💰 Daily Operating Cost: $3,240
-📈 Monthly Projection: $97,200 (8% under budget)
+💰 Daily Operating Cost: SAR 3,240
+📈 Monthly Projection: SAR 97,200 (8% under budget)
 ⛽ Fuel: 38% of total costs
 🔧 Maintenance: 22% of total costs
 
 Cost Breakdown:
-• Fuel: $1,235/day
-• Maintenance: $714/day  
-• Insurance: $425/day
-• Driver wages: $866/day
+• Fuel: SAR 1,235/day
+• Maintenance: SAR 714/day  
+• Insurance: SAR 425/day
+• Driver wages: SAR 866/day
 
 Savings This Month:
-• Route optimization: $1,200 saved
-• Preventive maintenance: $800 saved
-• Fuel efficiency programs: $650 saved
+• Route optimization: SAR 1,200 saved
+• Preventive maintenance: SAR 800 saved
+• Fuel efficiency programs: SAR 650 saved
 
-Budget Status: 8% under monthly budget ($7,800 savings)`,
+Budget Status: 8% under monthly budget (SAR 7,800 savings)`,
     followUps: ['View detailed expense report', 'Compare with previous months', 'Set cost reduction targets']
   },
   {
@@ -207,7 +207,7 @@ Recommendations:
 Today's Highlights:
 • 847 km traveled across all vehicles
 • 89% on-time delivery rate
-• $3,240 total operating costs
+• SAR 3,240 total operating costs
 • Zero safety incidents
 
 Key Metrics:
