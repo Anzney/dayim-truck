@@ -186,7 +186,7 @@ const DashboardPage = () => {
                 </div>
                 <div>
                   <h2 className='font-bold text-lg tracking-tight'>
-                    DayimGPT
+                    Fleet-Track GPT
                   </h2>
                   <p className='text-xs text-muted-foreground'>AI-powered fleet insights</p>
                 </div>

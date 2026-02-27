@@ -2,23 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 
-interface ScheduleItem {
-  id: string;
-  vehicle: string;
-  service: string;
-  date: string;
-  cost: number;
-  status: "Scheduled" | "Overdue" | "Completed";
-}
-
-const scheduleData: ScheduleItem[] = [
-  { id: "M-001", vehicle: "V-003", service: "Oil Change", date: "2026-02-20", cost: 450, status: "Scheduled" },
-  { id: "M-002", vehicle: "V-001", service: "Tire Rotation", date: "2026-02-25", cost: 200, status: "Scheduled" },
-  { id: "M-003", vehicle: "V-005", service: "Brake Inspection", date: "2026-03-01", cost: 350, status: "Scheduled" },
-  { id: "M-004", vehicle: "V-008", service: "Engine Diagnostic", date: "2026-02-18", cost: 600, status: "Overdue" },
-  { id: "M-005", vehicle: "V-002", service: "Transmission Service", date: "2026-02-15", cost: 1200, status: "Completed" },
-  { id: "M-006", vehicle: "V-007", service: "AC Repair", date: "2026-02-10", cost: 800, status: "Completed" },
-];
+import { scheduleData } from "@/data/maintenance";
 
 const statusStyles = {
   Scheduled: "bg-amber-500/10 text-amber-500 border-amber-500/20",
@@ -64,14 +48,12 @@ export function MaintenanceSchedule() {
                     <span className="text-muted-foreground">{item.date.split('-').slice(1).join('-')}</span>
                   </div>
                 </td>
-                <td className="py-3 px-4 text-foreground font-black group-hover:text-primary transition-colors">${item.cost}</td>
+                <td className="py-3 px-4 text-foreground font-black group-hover:text-primary transition-colors">SAR {item.cost}</td>
                 <td className="py-3 px-4">
                   <Badge variant="outline" className={`${statusStyles[item.status]} font-bold px-3 py-1 rounded-full transition-all duration-300 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.05)]`}>
                     {item.status}
                   </Badge>
                 </td>
-                {/* Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </tr>
             ))}
           </tbody>

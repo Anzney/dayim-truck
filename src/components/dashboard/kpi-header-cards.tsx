@@ -97,7 +97,7 @@ const KpiHeaderCards = () => {
                     <div className='flex items-center gap-2 mb-2'>
                       <Sparkles className='size-5' />
                       <h4 className='  font-bold text-sm'>
-                        DayimGPT Insights
+                        Fleet-Track GPT Insights
                       </h4>
                     </div>
                     <p className='text-sm   tracking-tight mb-1'>

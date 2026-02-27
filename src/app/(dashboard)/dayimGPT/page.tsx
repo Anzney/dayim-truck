@@ -5,7 +5,7 @@ import { Send } from 'lucide-react'
 const DayimGPT = () => {
   return (
     <div className='h-[calc(100vh-64px)] w-full flex items-center flex-col justify-center px-4'>
-      <p className='text-4xl md:text-5xl   font-bold text-center'>Welcome to DayimGPT</p>
+      <p className='text-4xl md:text-5xl   font-bold text-center'>Welcome to Fleet-Track GPT</p>
 
       <div className='w-full max-w-3xl mt-10'>
         <div className='border rounded-xl overflow-hidden bg-background/50'>

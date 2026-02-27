@@ -4,13 +4,7 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { motion } from "framer-motion";
 
-const data = [
-  { name: "Fuel", value: 42500, color: "var(--primary)" },
-  { name: "Maintenance", value: 18200, color: "#fbbf24" },
-  { name: "Insurance", value: 12800, color: "#10b981" },
-  { name: "Tolls", value: 5600, color: "#a855f7" },
-  { name: "Other", value: 3400, color: "#64748b" },
-];
+import { expenseBreakdownData as data } from "@/data/fuel-costs";
 
 export function ExpenseBreakdown() {
   return (
@@ -52,7 +46,7 @@ export function ExpenseBreakdown() {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
             <span className="text-muted-foreground text-xs">Total</span>
-            <span className="text-foreground font-bold text-lg">$82.5K</span>
+            <span className="text-foreground font-bold text-lg">SAR 82.5K</span>
           </div>
         </div>
 
@@ -69,7 +63,7 @@ export function ExpenseBreakdown() {
                 />
                 <span className="text-sm text-muted-foreground group-hover/item:text-foreground transition-colors">{item.name}</span>
               </div>
-              <span className="text-sm font-semibold text-foreground">${item.value.toLocaleString()}</span>
+              <span className="text-sm font-semibold text-foreground">SAR {item.value.toLocaleString()}</span>
             </div>
           ))}
         </div>

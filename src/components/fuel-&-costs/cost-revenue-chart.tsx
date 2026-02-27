@@ -4,14 +4,7 @@ import React from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 
-const data = [
-  { name: "V-001", cost: 4200, revenue: 8500 },
-  { name: "V-002", cost: 4800, revenue: 11500 },
-  { name: "V-003", cost: 3500, revenue: 5200 },
-  { name: "V-004", cost: 6500, revenue: 8800 },
-  { name: "V-005", cost: 5800, revenue: 12500 },
-  { name: "V-006", cost: 4200, revenue: 7200 },
-];
+import { costRevenueData as data } from "@/data/fuel-costs";
 
 export function CostVsRevenueChart() {
   return (

@@ -4,14 +4,7 @@ import React from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 
-const data = [
-  { name: "Aug", consumption: 12500, baseline: 4200 },
-  { name: "Sep", consumption: 11500, baseline: 4500 },
-  { name: "Oct", consumption: 13500, baseline: 4300 },
-  { name: "Nov", consumption: 12800, baseline: 4100 },
-  { name: "Dec", consumption: 11000, baseline: 3800 },
-  { name: "Jan", consumption: 13000, baseline: 4400 },
-];
+import { consumptionTrendData as data } from "@/data/fuel-costs";
 
 export function ConsumptionTrend() {
   return (
