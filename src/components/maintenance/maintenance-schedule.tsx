@@ -54,8 +54,6 @@ export function MaintenanceSchedule() {
                     {item.status}
                   </Badge>
                 </td>
-                {/* Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </tr>
             ))}
           </tbody>
