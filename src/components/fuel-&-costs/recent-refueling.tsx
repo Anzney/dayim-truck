@@ -4,14 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const refuelingData = [
-  { id: "V-002", station: "BP Highway 5", date: "2026-02-14", amount: "95 gal", price: 285 },
-  { id: "V-004", station: "Exxon NJ-95", date: "2026-02-13", amount: "110 gal", price: 330 },
-  { id: "V-006", station: "Chevron I-75", date: "2026-02-12", amount: "88 gal", price: 264 },
-  { id: "V-007", station: "Pilot Columbus", date: "2026-02-11", amount: "135 gal", price: 405 },
-  { id: "V-001", station: "Shell Route 66", date: "2026-02-10", amount: "92 gal", price: 276 },
-  { id: "V-005", station: "Texaco Express", date: "2026-02-09", amount: "105 gal", price: 315 },
-];
+import { recentRefuelingData as refuelingData } from "@/data/fuel-costs";
 
 export function RecentRefueling() {
   return (
@@ -47,7 +40,7 @@ export function RecentRefueling() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold text-foreground">${item.price}</span>
+                  <span className="text-sm font-bold text-foreground">SAR {item.price}</span>
                 </div>
               </div>
             </motion.div>

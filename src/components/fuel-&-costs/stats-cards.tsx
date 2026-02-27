@@ -2,41 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Fuel, DollarSign, TrendingUp, Activity } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-const stats = [
-  {
-    title: "Total Fuel Cost",
-    value: "$12,900",
-    change: "4.8%",
-    isNegative: true,
-    icon: <Fuel className="size-5 text-primary" />,
-    bgIcon: "bg-primary/10",
-  },
-  {
-    title: "Avg Cost/Vehicle",
-    value: "$1,612",
-    icon: <DollarSign className="size-5 text-emerald-400" />,
-    bgIcon: "bg-emerald-500/10",
-  },
-  {
-    title: "Total Expenses",
-    value: "$82.5K",
-    change: "2.1%",
-    isNegative: false,
-    icon: <TrendingUp className="size-5 text-primary" />,
-    bgIcon: "bg-primary/10",
-  },
-  {
-    title: "Fuel Efficiency",
-    value: "6.8 mpg",
-    change: "0.3 mpg",
-    isNegative: false,
-    icon: <Activity className="size-5 text-primary" />,
-    bgIcon: "bg-primary/10",
-  },
-];
+import { fuelStats as stats } from "@/data/fuel-costs";
 
 export function StatsCards() {
   return (
