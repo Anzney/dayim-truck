@@ -58,7 +58,7 @@ const FleetMaintenance = () => {
                 <div className='flex items-center gap-2 mb-2'>
                   <Sparkles className='size-5' />
                   <h4 className='font-bold text-sm'>
-                    Fleet-Track GPT Maintenance Insights
+                    FleetShare360 Track GPT Maintenance Insights
                   </h4>
                 </div>
                 {aiMaintenanceInsights.map((insight) => (

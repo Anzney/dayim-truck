@@ -186,7 +186,7 @@ const DashboardPage = () => {
                 </div>
                 <div>
                   <h2 className='font-bold text-lg tracking-tight'>
-                    Fleet-Track GPT
+                    FleetShare360 Track GPT
                   </h2>
                   <p className='text-xs text-muted-foreground'>AI-powered fleet insights</p>
                 </div>

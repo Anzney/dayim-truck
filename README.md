@@ -13,7 +13,7 @@ An advanced Fleet Management Dashboard built with Next.js mapping, data visualiz
 
 ## Features
 - **Interactive Dashboard:** Core fleet metrics, real-time alerts, and map visualization.
-- **AI Insights (Fleet-Track GPT):** AI-powered summaries and anomaly detection for maintenance and fuel data.
+- **AI Insights (FleetShare360 Track GPT):** AI-powered summaries and anomaly detection for maintenance and fuel data.
 - **Fuel & Costs Analytics:** Drill-down into fuel consumption trends, cost vs revenue, and recent refueling data (in SAR).
 - **Maintenance Tracking:** Proactive scheduling, active fault codes, and vehicle health summaries.
 
