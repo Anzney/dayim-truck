@@ -37,7 +37,7 @@ export const routes: Route[] = [
     id: 4,
     icon: <BotMessageSquare className="size-5" />,
     href: "/dayimGPT",
-    title: "Fleet-Track GPT"
+    title: "FleetShare360 Track GPT"
   },
   {
     id: 9,
@@ -89,7 +89,7 @@ const AppSidebar = () => {
     <Sidebar collapsible="icon">
       <ShadcnSidebarHeader className="p-4 flex h-16 items-center flex-row space-x-2">
         <Image src="/icon.svg" height={30} width={30} alt="Dayim Logo" className="rounded-sm" />
-        <span className="font-bold text-lg truncate group-data-[collapsible=icon]:hidden">Fleet Track</span>
+        <span className="font-bold text-lg truncate group-data-[collapsible=icon]:hidden">FleetShare360 Track</span>
       </ShadcnSidebarHeader>
       <SidebarContent>
         <SidebarGroup>
